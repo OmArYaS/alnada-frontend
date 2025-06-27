@@ -14,7 +14,6 @@ export default function Product() {
   const images =
     data.images && data.images.length > 0 ? data.images : [data.image];
   const [selectedImage, setSelectedImage] = useState(images[0]);
-  const [selectedColor, setSelectedColor] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState(null);
 
@@ -32,7 +31,7 @@ export default function Product() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ productId, quantity, color: selectedColor }),
+        body: JSON.stringify({ productId, quantity }),
       });
 
       if (!response.ok) {
@@ -60,22 +59,6 @@ export default function Product() {
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
-
-  const handleColorSelect = (color) => {
-    setSelectedColor(color);
-  };
-
-  // Set default color if available
-  useEffect(() => {
-    if (
-      data.color &&
-      Array.isArray(data.color) &&
-      data.color.length > 0 &&
-      !selectedColor
-    ) {
-      setSelectedColor(data.color[0]);
-    }
-  }, [data.color, selectedColor]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -153,9 +136,9 @@ export default function Product() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="mt-2 text-2xl font-bold text-blue-600"
+                  className="mt-2 text-2xl font-bold text-primary"
                 >
-                  ${data.price}
+                  {data.price} EGP
                 </motion.p>
               </div>
 
@@ -174,36 +157,10 @@ export default function Product() {
                 transition={{ delay: 0.3 }}
                 className="space-y-4"
               >
-                {data.color &&
-                  Array.isArray(data.color) &&
-                  data.color.length > 0 && (
-                    <div className="space-y-2">
-                      <span className="text-gray-600 font-medium">
-                        Select Color:
-                      </span>
-                      <div className="flex flex-wrap gap-2">
-                        {data.color.map((color) => (
-                          <motion.button
-                            key={color}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleColorSelect(color)}
-                            className={`px-4 py-2 rounded-lg border-2 transition-all duration-200 ${
-                              selectedColor === color
-                                ? "border-primary bg-primary text-white"
-                                : "border-gray-300 hover:border-primary"
-                            }`}
-                          >
-                            {color}
-                          </motion.button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                {data.brand && (
+                {data.address && (
                   <div className="flex items-center space-x-2">
-                    <span className="text-gray-600 font-medium">Brand:</span>
-                    <span className="text-gray-900">{data.brand}</span>
+                    <span className="text-gray-600 font-medium">Address:</span>
+                    <span className="text-gray-900">{data.address}</span>
                   </div>
                 )}
                 {data.size && (
@@ -269,15 +226,11 @@ export default function Product() {
                         quantity,
                       })
                     }
-                    disabled={
-                      addToCartMutation.isPending ||
-                      data.stock === 0 ||
-                      (data.color && data.color.length > 0 && !selectedColor)
-                    }
+                    disabled={addToCartMutation.isPending || data.stock === 0}
                     className={`flex-1 px-6 py-3 rounded-lg text-white font-medium transition-colors ${
                       data.stock === 0
                         ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-blue-600 hover:bg-blue-700"
+                        : "bg-primary hover:bg-primary/80"
                     }`}
                   >
                     {addToCartMutation.isPending ? (
@@ -304,10 +257,6 @@ export default function Product() {
                         </svg>
                         Adding to Cart...
                       </span>
-                    ) : data.color &&
-                      data.color.length > 0 &&
-                      !selectedColor ? (
-                      "Select Color First"
                     ) : (
                       "Add to Cart"
                     )}
@@ -325,7 +274,7 @@ export default function Product() {
                       <strong className="font-bold">Success!</strong>
                       <span className="block sm:inline">
                         {" "}
-                        Product added to cart.
+                        Property added to cart.
                       </span>
                     </motion.div>
                   )}

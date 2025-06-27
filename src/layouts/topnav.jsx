@@ -19,14 +19,14 @@ export default function Topnav() {
   }, []);
 
   const menuItems = [
-    { to: "products", label: "Products" },
-    { to: "about", label: "About" },
-    { to: "contact", label: "Contact" },
+    { to: "products", label: "العقارات" },
+    { to: "about", label: "من نحن" },
+    { to: "contact", label: "اتصل بنا" },
   ];
 
   return (
     <>
-      <nav className="topnav flex justify-between w-full h-[10vh] bg-secondary font-roboto px-4 md:px-8">
+      <nav className="topnav flex justify-between items-center w-full bg-secondary font-roboto px-4 md:px-8">
         {/* Mobile Menu Button */}
         <button
           className="md:hidden flex items-center"
@@ -59,30 +59,25 @@ export default function Topnav() {
         </ul>
 
         {/* Logo */}
-        <div className="topnav__logo flex  justify-center items-center justify-self-center w-1/3 h-full">
+        <div className="topnav__logo flex  justify-center items-center justify-self-center w-1/3 h-20">
           <NavLink to={"/"} className="topnav__logo__img h-full">
-            <img src={logo} alt="logo" className="h-full object-contain" />
+            <img
+              src={logo}
+              alt="logo"
+              className="h-full object-contain scale-[1.5] "
+            />
           </NavLink>
         </div>
 
         {/* User Actions */}
         <div className="hidden md:flex justify-evenly items-center w-1/3 h-full">
-          {/* <NavLink
-            to="/wishlist"
-            className="hover:text-primary transition-colors duration-300"
-          >
-            <div className="flex items-center gap-2">
-              <i className="fi fi-rs-heart text-xl"></i>
-              <span>Wishlist</span>
-            </div>
-          </NavLink> */}
           <NavLink
             to="/cart"
             className="hover:text-primary transition-colors duration-300"
           >
             <div className="flex items-center gap-2">
               <i className="fi fi-rs-shopping-bag text-xl"></i>
-              <span>Cart</span>
+              <span>السلة</span>
             </div>
           </NavLink>
           {isLoggedIn ? (
@@ -92,7 +87,7 @@ export default function Topnav() {
             >
               <div className="flex items-center gap-2">
                 <i className="fi fi-rr-user text-xl"></i>
-                <span>Account</span>
+                <span>الحساب</span>
               </div>
             </NavLink>
           ) : (
@@ -101,13 +96,13 @@ export default function Topnav() {
                 to="/auth/login"
                 className="hover:text-primary transition-colors duration-300"
               >
-                Login
+                تسجيل الدخول
               </NavLink>
               <NavLink
                 to="/auth/signup"
                 className="bg-primary text-white px-4 py-2 rounded-full hover:bg-primary/90 transition-colors duration-300"
               >
-                Sign Up
+                إنشاء حساب
               </NavLink>
             </div>
           )}
@@ -142,23 +137,13 @@ export default function Topnav() {
               <DashboardLink />
               <div className="flex flex-col items-center space-y-4 pt-4 border-t w-full">
                 <NavLink
-                  to="/wishlist"
-                  className="hover:text-primary transition-colors duration-300"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <div className="flex items-center gap-2">
-                    <i className="fi fi-rs-heart text-xl"></i>
-                    <span>Wishlist</span>
-                  </div>
-                </NavLink>
-                <NavLink
                   to="/cart"
                   className="hover:text-primary transition-colors duration-300"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <div className="flex items-center gap-2">
                     <i className="fi fi-rs-shopping-bag text-xl"></i>
-                    <span>Cart</span>
+                    <span>السلة</span>
                   </div>
                 </NavLink>
                 {isLoggedIn ? (
@@ -169,7 +154,7 @@ export default function Topnav() {
                   >
                     <div className="flex items-center gap-2">
                       <i className="fi fi-rr-user text-xl"></i>
-                      <span>Account</span>
+                      <span>الحساب</span>
                     </div>
                   </NavLink>
                 ) : (
@@ -179,14 +164,14 @@ export default function Topnav() {
                       className="hover:text-primary transition-colors duration-300"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Login
+                      تسجيل الدخول
                     </NavLink>
                     <NavLink
                       to="/auth/signup"
                       className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-colors duration-300"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Sign Up
+                      إنشاء حساب
                     </NavLink>
                   </div>
                 )}

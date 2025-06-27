@@ -4,13 +4,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#caa0a2", // استخدام المتغير هنا
-        secondary: "#e4d1d4",
+        primary: "#597445", // استخدام المتغير هنا
+        secondary: "#D5F0C1",
         accent: "#f2e3e5",
       },
       fontFamily: {
-        roboto: ["Roboto", "sans-serif"],
-        Shadows: ["Merienda", "sans-serif"],
+        roboto: ["cairo", "sans-serif"],
+        Shadows: ["cairo", "sans-serif"],
       },
     },
   },

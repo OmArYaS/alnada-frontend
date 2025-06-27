@@ -12,9 +12,7 @@ export default function ControlTopbar({ filters, setFilters, setShowModal }) {
     <div className="space-y-4">
       {/* Search and Add Button */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h1 className="text-2xl font-bold text-gray-800">
-          Products Management
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-800">إدارة العقارات</h1>
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -34,7 +32,7 @@ export default function ControlTopbar({ filters, setFilters, setShowModal }) {
               d="M12 6v6m0 0v6m0-6h6m-6 0H6"
             />
           </svg>
-          Add New Product
+          إضافة عقار جديد
         </motion.button>
       </div>
 
@@ -48,7 +46,7 @@ export default function ControlTopbar({ filters, setFilters, setShowModal }) {
             onChange={(e) =>
               setFilters((prev) => ({ ...prev, name: e.target.value, page: 1 }))
             }
-            placeholder="Search products..."
+            placeholder="البحث في العقارات..."
             className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -80,7 +78,7 @@ export default function ControlTopbar({ filters, setFilters, setShowModal }) {
             }
             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="">All Categories</option>
+            <option value="">جميع الفئات</option>
             {categories?.map((cat) => (
               <option key={cat._id} value={cat._id}>
                 {cat.name}
@@ -92,10 +90,10 @@ export default function ControlTopbar({ filters, setFilters, setShowModal }) {
         {/* Price Range */}
         <div className="flex gap-4 flex-1 min-w-[200px]">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-2 text-gray-500">$</span>
+            <span className="absolute left-3 top-2 text-gray-500">ج.م</span>
             <input
               type="number"
-              placeholder="Min Price"
+              placeholder="الحد الأدنى للسعر"
               value={filters.minPrice}
               onChange={(e) =>
                 setFilters((prev) => ({
@@ -108,10 +106,10 @@ export default function ControlTopbar({ filters, setFilters, setShowModal }) {
             />
           </div>
           <div className="relative flex-1">
-            <span className="absolute left-3 top-2 text-gray-500">$</span>
+            <span className="absolute left-3 top-2 text-gray-500">ج.م</span>
             <input
               type="number"
-              placeholder="Max Price"
+              placeholder="الحد الأقصى للسعر"
               value={filters.maxPrice}
               onChange={(e) =>
                 setFilters((prev) => ({

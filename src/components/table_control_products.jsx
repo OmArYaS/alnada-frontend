@@ -2,17 +2,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { editProductMutationFn } from "../service/mutationFn";
 
 const headers = [
-  { key: "image", label: "Image" },
-  { key: "name", label: "Name" },
-  { key: "brand", label: "Brand" },
-  { key: "stock", label: "Stock" },
-  { key: "color", label: "Color" },
-  { key: "size", label: "Size" },
-  { key: "price", label: "Price" },
-  { key: "description", label: "Description" },
-  { key: "category", label: "Category" },
-  { key: "createdAt", label: "Created At" },
-  { key: "actions", label: "Actions" },
+  { key: "image", label: "الصورة" },
+  { key: "name", label: "اسم العقار" },
+  { key: "address", label: "العنوان" },
+  { key: "stock", label: "الحالة" },
+  { key: "size", label: "المساحة" },
+  { key: "price", label: "السعر" },
+  { key: "description", label: "الوصف" },
+  { key: "category", label: "النوع" },
+  { key: "createdAt", label: "تاريخ الإضافة" },
+  { key: "actions", label: "الإجراءات" },
 ];
 
 export default function TableControlProducts({
@@ -78,21 +77,44 @@ export default function TableControlProducts({
   const prevPage = () =>
     setFilters((prev) => ({ ...prev, page: prev.page - 1 }));
 
+  if (isLoading) {
+    return (
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="animate-pulse">
+          <div className="h-12 bg-gray-200"></div>
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-16 bg-gray-100 border-b"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!products || products.length === 0) {
+    return (
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="text-center py-8">
+          <p className="text-gray-500">لم يتم العثور على عقارات</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <div className="overflow-auto">
-        <table className="min-w-[1000px] w-full border-collapse ">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               {headers.map((header) => (
                 <th
                   key={header.key}
-                  className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
-                    header.key !== "actions" && header.key !== "image"
-                      ? "cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleSort(header.key)}
+                  className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors ${
+                    header.key === "actions" || header.key === "image"
+                      ? "cursor-default"
                       : ""
                   }`}
-                  onClick={() => handleSort(header.key)}
                 >
                   <div className="flex items-center">
                     {header.label}
@@ -103,189 +125,178 @@ export default function TableControlProducts({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            <AnimatePresence>
-              {isLoading ? (
-                <tr>
-                  <td colSpan="11" className="px-6 py-4 text-center">
-                    <div className="flex justify-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                    </div>
-                  </td>
-                </tr>
-              ) : products.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan="11"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    No products found
-                  </td>
-                </tr>
-              ) : (
-                products.map((product) => (
-                  <motion.tr
-                    key={product._id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="hover:bg-gray-50"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {(() => {
-                        const images =
-                          product.images && product.images.length > 0
-                            ? product.images
-                            : [product.image];
-                        const mainImage = images[0];
-                        return (
-                          <div className="relative w-12 h-12 flex items-center justify-center">
-                            <img
-                              src={mainImage}
-                              alt={product.name}
-                              className="w-12 h-12 object-cover rounded-lg"
-                            />
-                            {/* {images.length > 1 && (
-                              <span className="absolute top-0 right-0 bg-black bg-opacity-60 text-white text-[10px] px-1.5 py-0.5 rounded-full z-10">
-                                {images.length}
-                              </span>
-                            )} */}
-                            {/* {images.length > 1 && (
-                              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-0.5 bg-white/80 rounded px-1 py-0.5 shadow">
-                                {images.slice(0, 3).map((img, idx) => (
-                                  <img
-                                    key={idx}
-                                    src={img}
-                                    alt={product.name + " thumb " + (idx + 1)}
-                                    className="w-3 h-3 object-cover rounded"
-                                  />
-                                ))}
-                              </div>
-                            )} */}
-                          </div>
-                        );
-                      })()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {product.name}
+            {products.map((product) => (
+              <motion.tr
+                key={product._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="hover:bg-gray-50 transition-colors"
+              >
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {(() => {
+                    const images =
+                      product.images && product.images.length > 0
+                        ? product.images
+                        : [product.image];
+                    const mainImage = images[0];
+                    return (
+                      <div className="relative w-12 h-12 flex items-center justify-center">
+                        <img
+                          src={mainImage}
+                          alt={product.name}
+                          className="w-12 h-12 object-cover rounded-lg"
+                        />
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {product.brand || "-"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {product.stock ?? "-"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {Array.isArray(product.color) &&
-                        product.color.length > 0 ? (
-                          <div className="flex flex-wrap gap-1">
-                            {product.color.map((color, index) => (
-                              <span
-                                key={index}
-                                className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs"
-                              >
-                                {color}
-                              </span>
-                            ))}
-                          </div>
-                        ) : (
-                          product.color || "-"
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {product.size || "-"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        ${product.price}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-500 line-clamp-2 max-w-xs">
-                        {product.description}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {product.category?.name}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">
-                        {new Date(product.createdAt).toLocaleDateString()}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex items-center space-x-3">
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() =>
-                            setShowEditModal({
-                              show: true,
-                              id: product._id,
-                            })
-                          }
-                          className="text-blue-600 hover:text-blue-900"
-                        >
-                          Edit
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() =>
-                            setShowDeleteModal({
-                              show: true,
-                              id: product._id,
-                            })
-                          }
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Delete
-                        </motion.button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))
-              )}
-            </AnimatePresence>
+                    );
+                  })()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">
+                    {product.name}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-500">
+                    {product.address || "-"}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-500">
+                    {product.stock > 0 ? "متاح" : "محجوز"}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-500">
+                    {product.size || "-"}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">
+                    ج.م {product.price?.toFixed(2) || "0.00"}
+                  </div>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="text-sm text-gray-500 max-w-xs truncate">
+                    {product.description || "-"}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-500">
+                    {product.category?.name || "-"}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-500">
+                    {new Date(product.createdAt).toLocaleDateString()}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => setShowEditModal(product._id)}
+                      className="text-indigo-600 hover:text-indigo-900 transition-colors"
+                    >
+                      تعديل
+                    </button>
+                    <button
+                      onClick={() => setShowDeleteModal(product._id)}
+                      className="text-red-600 hover:text-red-900 transition-colors"
+                    >
+                      حذف
+                    </button>
+                  </div>
+                </td>
+              </motion.tr>
+            ))}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center space-x-4 my-2">
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          disabled={page <= 1}
-          onClick={prevPage}
-          className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </motion.button>
-        <span className="text-gray-700">
-          Page {page} of {totalPages}
-        </span>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          disabled={page >= totalPages}
-          onClick={nextPage}
-          className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Next
-        </motion.button>
-      </div>
+      {totalPages > 1 && (
+        <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+          <div className="flex-1 flex justify-between sm:hidden">
+            <button
+              onClick={() =>
+                setFilters((prev) => ({ ...prev, page: prev.page - 1 }))
+              }
+              disabled={page <= 1}
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              السابق
+            </button>
+            <button
+              onClick={() =>
+                setFilters((prev) => ({ ...prev, page: prev.page + 1 }))
+              }
+              disabled={page >= totalPages}
+              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              التالي
+            </button>
+          </div>
+          <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-gray-700">
+                عرض الصفحة <span className="font-medium">{page}</span> من{" "}
+                <span className="font-medium">{totalPages}</span>
+              </p>
+            </div>
+            <div>
+              <nav
+                className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                aria-label="Pagination"
+              >
+                <button
+                  onClick={() =>
+                    setFilters((prev) => ({ ...prev, page: prev.page - 1 }))
+                  }
+                  disabled={page <= 1}
+                  className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span className="sr-only">السابق</span>
+                  <svg
+                    className="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={() =>
+                    setFilters((prev) => ({ ...prev, page: prev.page + 1 }))
+                  }
+                  disabled={page >= totalPages}
+                  className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span className="sr-only">التالي</span>
+                  <svg
+                    className="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

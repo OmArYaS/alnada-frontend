@@ -65,8 +65,7 @@ const ProductList = ({ products }) => {
                 <p className="text-sm font-medium text-gray-900 truncate">
                   {item.productId.name}
                 </p>
-                <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                  <span className="font-medium">${item.productId.price}</span>
+                <div className="flex items-center gap-1.5 text-xs text-gray-400">
                   <span>×</span>
                   <span className="font-medium">{item.quantity}</span>
                   <span>=</span>
@@ -74,13 +73,6 @@ const ProductList = ({ products }) => {
                     ${(item.productId.price * item.quantity).toFixed(2)}
                   </span>
                 </div>
-                {item.color && (
-                  <div className="mt-1">
-                    <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs">
-                      Color: {item.color}
-                    </span>
-                  </div>
-                )}
               </div>
             </>
           ) : (
@@ -90,7 +82,7 @@ const ProductList = ({ products }) => {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-500 truncate">
-                  Product Deleted
+                  Property Deleted
                 </p>
                 <div className="flex items-center gap-1.5 text-xs text-gray-400">
                   <span>Quantity: {item.quantity}</span>

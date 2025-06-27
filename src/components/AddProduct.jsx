@@ -1,425 +1,275 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProductMutationFn } from "../service/mutationFn";
-import { useCategories } from "../hooks/useCategories";
-import { useAuth } from "../hooks/useAuth";
-import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
+import { motion, AnimatePresence } from "framer-motion";
+import { BACKEND_URL } from "../service/queryfn";
+import { useAuth } from "../hooks/useAuth";
 
-export default function AddProductModal({ isOpen, onClose }) {
+export default function AddProduct({ isOpen, onClose, onSuccess }) {
   const { token } = useAuth();
-  const [form, setForm] = useState({
-    name: "",
-    brand: "",
-    stock: "",
-    color: [],
-    size: "",
-    price: "",
-    description: "",
-    category: "",
-    images: [],
-  });
-  const [errors, setErrors] = useState({});
-  const [previews, setPreviews] = useState([]);
-  const [newColor, setNewColor] = useState("");
-  const { data: categories = [], isLoading: categoriesLoading } =
-    useCategories();
-
   const queryClient = useQueryClient();
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    stock: "",
+    size: "",
+    address: "",
+    category: "",
+  });
+  const [images, setImages] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const createProductMutation = useMutation({
-    mutationFn: createProductMutationFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["products"]);
-      toast.success("Product added successfully");
-      onClose();
-      setForm({
-        name: "",
-        brand: "",
-        stock: "",
-        color: [],
-        size: "",
-        price: "",
-        description: "",
-        category: "",
-        images: [],
+  const addProductMutation = useMutation({
+    mutationFn: async (formDataToSend) => {
+      const response = await fetch(`${BACKEND_URL}/api/products`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formDataToSend,
       });
-      setPreviews([]);
-      setNewColor("");
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "فشل في إضافة العقار");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("تم إضافة العقار بنجاح!");
+      onSuccess?.();
+      onClose();
+      resetForm();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to add product");
+      toast.error(error.message || "فشل في إضافة العقار");
+    },
+    onSettled: () => {
+      setIsSubmitting(false);
     },
   });
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!form.name) newErrors.name = "Name is required";
-    if (!form.price) newErrors.price = "Price is required";
-    if (!form.description) newErrors.description = "Description is required";
-    if (!form.category) newErrors.category = "Category is required";
-    if (!form.images || form.images.length === 0)
-      newErrors.images = "At least one image is required";
-    if (form.price && isNaN(form.price))
-      newErrors.price = "Price must be a number";
-    if (form.stock && isNaN(form.stock))
-      newErrors.stock = "Stock must be a number";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      description: "",
+      price: "",
+      stock: "",
+      size: "",
+      address: "",
+      category: "",
+    });
+    setImages([]);
   };
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "images") {
-      const fileArray = Array.from(files);
-      setForm((prev) => ({
-        ...prev,
-        images: fileArray,
-      }));
-      // Generate previews for all images
-      const previewPromises = fileArray.map(
-        (file) =>
-          new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(file);
-          })
-      );
-      Promise.all(previewPromises).then((results) => setPreviews(results));
-    } else {
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setImages(files);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    setIsSubmitting(true);
 
-    const formData = new FormData();
-    Object.entries(form).forEach(([key, value]) => {
-      if (key === "images") {
-        value.forEach((img) => {
-          formData.append("images", img);
-        });
-      } else if (key === "color") {
-        value.forEach((color) => {
-          formData.append("color", color);
-        });
-      } else if (value !== "") {
-        formData.append(key, value);
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (formData[key]) {
+        formDataToSend.append(key, formData[key]);
       }
     });
-    createProductMutation.mutate({ formData, token });
-  };
 
-  const addColor = () => {
-    if (newColor.trim() && !form.color.includes(newColor.trim())) {
-      setForm((prev) => ({
-        ...prev,
-        color: [...prev.color, newColor.trim()],
-      }));
-      setNewColor("");
-    }
-  };
+    images.forEach((image) => {
+      formDataToSend.append("images", image);
+    });
 
-  const removeColor = (colorToRemove) => {
-    setForm((prev) => ({
-      ...prev,
-      color: prev.color.filter((color) => color !== colorToRemove),
-    }));
+    addProductMutation.mutate(formDataToSend);
   };
 
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-      >
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
         >
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-800">
-                Add New Product
+                إضافة عقار جديد
               </h2>
               <button
                 onClick={onClose}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 transition-colors"
               >
-                ✕
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Name *
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    اسم العقار *
                   </label>
                   <input
+                    type="text"
                     name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.name ? "border-red-500" : "border-gray-300"
-                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="Product name"
-                  />
-                  {errors.name && (
-                    <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Brand
-                  </label>
-                  <input
-                    name="brand"
-                    value={form.brand}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Brand name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="أدخل اسم العقار"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Price *
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    السعر (جنيه مصري) *
                   </label>
                   <input
+                    type="number"
                     name="price"
-                    type="number"
-                    value={form.price}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.price ? "border-red-500" : "border-gray-300"
-                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="0.00"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    required
+                    min="0"
+                    step="0.01"
+                    placeholder="أدخل السعر"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   />
-                  {errors.price && (
-                    <p className="mt-1 text-sm text-red-500">{errors.price}</p>
-                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Stock
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    المساحة (متر مربع)
                   </label>
                   <input
-                    name="stock"
-                    type="number"
-                    value={form.stock}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.stock ? "border-red-500" : "border-gray-300"
-                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="0"
-                  />
-                  {errors.stock && (
-                    <p className="mt-1 text-sm text-red-500">{errors.stock}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Color
-                  </label>
-                  <div className="space-y-2">
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={newColor}
-                        onChange={(e) => setNewColor(e.target.value)}
-                        onKeyPress={(e) =>
-                          e.key === "Enter" && (e.preventDefault(), addColor())
-                        }
-                        className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Add a color"
-                      />
-                      <button
-                        type="button"
-                        onClick={addColor}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        Add
-                      </button>
-                    </div>
-                    {form.color.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {form.color.map((color, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                          >
-                            {color}
-                            <button
-                              type="button"
-                              onClick={() => removeColor(color)}
-                              className="text-blue-600 hover:text-blue-800"
-                            >
-                              ×
-                            </button>
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Size
-                  </label>
-                  <input
+                    type="text"
                     name="size"
-                    value={form.size}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Size"
+                    value={formData.size}
+                    onChange={handleInputChange}
+                    placeholder="أدخل المساحة"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   />
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Category *
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    الحالة *
                   </label>
                   <select
-                    name="category"
-                    value={form.category}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.category ? "border-red-500" : "border-gray-300"
-                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    name="stock"
+                    value={formData.stock}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   >
-                    <option value="">Select category</option>
-                    {categories.map((cat) => (
-                      <option key={cat._id} value={cat._id}>
-                        {cat.name}
-                      </option>
-                    ))}
+                    <option value="">اختر الحالة</option>
+                    <option value="1">متاح</option>
+                    <option value="0">محجوز</option>
                   </select>
-                  {errors.category && (
-                    <p className="mt-1 text-sm text-red-500">
-                      {errors.category}
-                    </p>
-                  )}
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description *
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    العنوان
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    placeholder="أدخل عنوان العقار"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    الوصف *
                   </label>
                   <textarea
                     name="description"
-                    value={form.description}
-                    onChange={handleChange}
-                    rows="3"
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.description ? "border-red-500" : "border-gray-300"
-                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="Product description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    required
+                    rows="4"
+                    placeholder="أدخل وصف العقار"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
                   />
-                  {errors.description && (
-                    <p className="mt-1 text-sm text-red-500">
-                      {errors.description}
-                    </p>
-                  )}
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Images *
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    صور العقار
                   </label>
-                  <div className="mt-1 flex items-center space-x-4 flex-wrap">
-                    <input
-                      name="images"
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleChange}
-                      className={`w-full px-4 py-2 rounded-lg border ${
-                        errors.images ? "border-red-500" : "border-gray-300"
-                      } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    />
-                    {previews.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {previews.map((src, idx) => (
-                          <img
-                            key={idx}
-                            src={src}
-                            alt={`Preview ${idx + 1}`}
-                            className="w-20 h-20 object-cover rounded-lg"
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  {errors.images && (
-                    <p className="mt-1 text-sm text-red-500">{errors.images}</p>
-                  )}
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    يمكنك اختيار عدة صور للعقار
+                  </p>
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-4 mt-6">
+              <div className="flex justify-end space-x-4 pt-6 border-t">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                 >
-                  Cancel
+                  إلغاء
                 </button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <button
                   type="submit"
-                  disabled={createProductMutation.isPending}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  disabled={isSubmitting}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
                 >
-                  {createProductMutation.isPending ? (
-                    <span className="flex items-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Adding...
-                    </span>
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      جاري الإضافة...
+                    </>
                   ) : (
-                    "Add Product"
+                    "إضافة العقار"
                   )}
-                </motion.button>
+                </button>
               </div>
             </form>
           </div>
         </motion.div>
-      </motion.div>
+      </div>
     </AnimatePresence>
   );
 }

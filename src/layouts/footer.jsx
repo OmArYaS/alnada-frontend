@@ -11,10 +11,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-white text-lg font-bold mb-4">MyaBag</h3>
+            <h3 className="text-white text-lg font-bold mb-4">ميا العقارية</h3>
             <p className="text-sm">
-              Your one-stop destination for premium bags and accessories.
-              Quality meets style in every product we offer.
+              وجهتك الموثوقة للعقارات والاستثمارات العقارية. نقدم لك أفضل الفرص
+              العقارية مع ضمان الجودة والموثوقية.
             </p>
             <div className="flex space-x-4">
               <motion.a
@@ -52,14 +52,14 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">Quick Links</h3>
+            <h3 className="text-white text-lg font-bold mb-4">روابط سريعة</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   to="/products"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Shop All
+                  جميع العقارات
                 </Link>
               </li>
               <li>
@@ -67,7 +67,7 @@ export default function Footer() {
                   to="/about"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  About Us
+                  من نحن
                 </Link>
               </li>
               <li>
@@ -75,7 +75,7 @@ export default function Footer() {
                   to="/contact"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Contact
+                  اتصل بنا
                 </Link>
               </li>
               <li>
@@ -83,7 +83,7 @@ export default function Footer() {
                   to="/faq"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  FAQ
+                  الأسئلة الشائعة
                 </Link>
               </li>
             </ul>
@@ -91,16 +91,14 @@ export default function Footer() {
 
           {/* Customer Service */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">
-              Customer Service
-            </h3>
+            <h3 className="text-white text-lg font-bold mb-4">خدمة العملاء</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   to="/shipping"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Shipping Policy
+                  سياسة الحجز
                 </Link>
               </li>
               <li>
@@ -108,7 +106,7 @@ export default function Footer() {
                   to="/returns"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Returns & Exchanges
+                  شروط الإلغاء
                 </Link>
               </li>
               <li>
@@ -116,7 +114,7 @@ export default function Footer() {
                   to="/privacy"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Privacy Policy
+                  سياسة الخصوصية
                 </Link>
               </li>
               <li>
@@ -124,7 +122,7 @@ export default function Footer() {
                   to="/terms"
                   className="text-sm hover:text-white transition-colors"
                 >
-                  Terms & Conditions
+                  الشروط والأحكام
                 </Link>
               </li>
             </ul>
@@ -132,14 +130,14 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">Stay Updated</h3>
+            <h3 className="text-white text-lg font-bold mb-4">ابق على اطلاع</h3>
             <p className="text-sm mb-4">
-              Subscribe to our newsletter for the latest updates and offers.
+              اشترك في نشرتنا الإخبارية للحصول على آخر العروض العقارية.
             </p>
             <form className="space-y-2">
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder="أدخل بريدك الإلكتروني"
                 className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:border-primary text-sm"
               />
               <motion.button
@@ -148,7 +146,7 @@ export default function Footer() {
                 type="submit"
                 className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
               >
-                Subscribe
+                اشتراك
               </motion.button>
             </form>
           </div>
@@ -158,7 +156,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm">
-              © {currentYear} MyaBag. All rights reserved.
+              © {currentYear} ميا العقارية. جميع الحقوق محفوظة.
             </p>
             <div className="flex space-x-6">
               {/* <img src="/visa.svg" alt="Visa" className="h-6" />

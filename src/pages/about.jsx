@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#e4d1d4] to-[#caa0a2] text-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-secondary to-primary text-gray-800">
       {/* Hero Section */}
       <div className="min-h-[50vh] flex items-center justify-center px-4">
         <div className="text-center max-w-4xl mx-auto">
@@ -11,12 +11,12 @@ export default function About() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <span className="text-8xl mb-8 block">👜</span>
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 text-[#caa0a2] leading-tight">
-              Welcome to MyABag
+            <span className="text-8xl mb-8 block">🏠</span>
+            <h1 className="text-6xl md:text-7xl font-bold mb-6 text-primary leading-tight">
+              مرحباً بك في الندي للتسويق العقاري
             </h1>
             <p className="text-xl md:text-2xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
-              Where Style Meets Functionality
+              حيث يلتقي الحلم بالواقع
             </p>
           </motion.div>
         </div>
@@ -27,26 +27,26 @@ export default function About() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#caa0a2]">
-                Our Mission
+              <h2 className="text-4xl md:text-5xl font-bold text-primary">
+                مهمتنا
               </h2>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Born from a passion for fashion and functionality, MyABag brings
-                you the perfect blend of style and practicality. We believe
-                every bag tells a story, and we're here to help you tell yours.
+                ولدت من شغف العقارات والاستثمار، تجلب لك ميا العقارية أفضل الفرص
+                العقارية. نؤمن أن كل عقار يحكي قصة، ونحن هنا لمساعدتك في تحقيق
+                حلمك العقاري.
               </p>
               <div className="flex gap-4">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
-                  className="bg-[#caa0a2] text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all"
+                  className="bg-primary text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all"
                 >
-                  Learn More
+                  اعرف المزيد
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
-                  className="border-2 border-[#caa0a2] text-[#caa0a2] px-6 py-3 rounded-full hover:bg-[#caa0a2]/10 transition-all"
+                  className="border-2 border-primary text-primary px-6 py-3 rounded-full hover:bg-primary/10 transition-all"
                 >
-                  Contact Us
+                  اتصل بنا
                 </motion.button>
               </div>
             </div>
@@ -54,14 +54,13 @@ export default function About() {
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="text-4xl">🎯</div>
-                  <h3 className="text-2xl font-semibold text-[#caa0a2]">
-                    Our Vision
+                  <h3 className="text-2xl font-semibold text-primary">
+                    رؤيتنا
                   </h3>
                 </div>
                 <p className="text-gray-700">
-                  To provide a seamless and enjoyable shopping experience while
-                  ensuring the highest quality products and customer
-                  satisfaction.
+                  أن نكون الوجهة الأولى للعقارات في مصر، ونقدم تجربة استثمارية
+                  فريدة مع ضمان أعلى مستويات الجودة والموثوقية.
                 </p>
               </div>
             </div>
@@ -72,25 +71,25 @@ export default function About() {
       {/* Features Section */}
       <div className="py-20 px-4 bg-white/20 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#caa0a2] mb-16">
-            Why Choose MyABag?
+          <h2 className="text-4xl md:text-5xl font-bold text-center text-primary mb-16">
+            لماذا تختار ميا العقارية؟
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                icon: "🚚",
-                title: "Fast Delivery",
-                desc: "Quick and reliable shipping to your doorstep",
+                icon: "🔑",
+                title: "تسليم فوري",
+                desc: "تسليم مفاتيح العقار فور إتمام الصفقة",
               },
               {
                 icon: "🛡️",
-                title: "Secure Shopping",
-                desc: "Safe and protected transactions every time",
+                title: "ضمان قانوني",
+                desc: "جميع العقارات مضمونة قانونياً ومؤمنة",
               },
               {
                 icon: "💎",
-                title: "Quality Products",
-                desc: "Curated selection of premium items",
+                title: "عقارات مميزة",
+                desc: "مجموعة مختارة من أفضل العقارات",
               },
             ].map((feature, index) => (
               <motion.div
@@ -102,7 +101,7 @@ export default function About() {
                 className="bg-white/30 backdrop-blur-lg rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all"
               >
                 <div className="text-5xl mb-6">{feature.icon}</div>
-                <h3 className="text-2xl font-semibold mb-4 text-[#caa0a2]">
+                <h3 className="text-2xl font-semibold mb-4 text-primary">
                   {feature.title}
                 </h3>
                 <p className="text-gray-700">{feature.desc}</p>
@@ -119,18 +118,18 @@ export default function About() {
             {[
               {
                 icon: "💡",
-                title: "Innovation",
-                desc: "Constantly evolving to bring you the latest trends",
+                title: "الابتكار",
+                desc: "نستخدم أحدث التقنيات لتسهيل عملية الاستثمار العقاري",
               },
               {
                 icon: "🌟",
-                title: "Quality",
-                desc: "Uncompromising standards in every product",
+                title: "الجودة",
+                desc: "نختار فقط أفضل العقارات لضمان عائد استثماري ممتاز",
               },
               {
                 icon: "❤️",
-                title: "Customer First",
-                desc: "Your satisfaction is our top priority",
+                title: "العميل أولاً",
+                desc: "رضاك ونجاحك هو هدفنا الأول والأخير",
               },
             ].map((value, index) => (
               <motion.div
@@ -142,7 +141,7 @@ export default function About() {
                 className="bg-white/30 backdrop-blur-lg rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all"
               >
                 <div className="text-5xl mb-6">{value.icon}</div>
-                <h3 className="text-2xl font-semibold mb-4 text-[#caa0a2]">
+                <h3 className="text-2xl font-semibold mb-4 text-primary">
                   {value.title}
                 </h3>
                 <p className="text-gray-700">{value.desc}</p>
@@ -162,17 +161,17 @@ export default function About() {
             viewport={{ once: true }}
             className="space-y-8"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-[#caa0a2]">
-              Ready to Start Shopping?
+            <h2 className="text-4xl md:text-5xl font-bold text-primary">
+              مستعد لبدء الاستثمار؟
             </h2>
             <p className="text-xl text-gray-700">
-              Discover our collection of premium bags and accessories
+              اكتشف مجموعتنا من العقارات المميزة وابدأ رحلة الاستثمار
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
-              className="bg-[#caa0a2] text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all"
+              className="bg-primary text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all"
             >
-              Shop Now
+              استكشف العقارات
             </motion.button>
           </motion.div>
         </div>

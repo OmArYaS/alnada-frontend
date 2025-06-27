@@ -3,16 +3,16 @@ import { motion } from "framer-motion";
 
 export default function Dashboard() {
   const navItems = [
-    { path: "control_products", label: "Products", icon: "📦" },
-    { path: "orders", label: "Orders", icon: "📋" },
-    { path: "categories", label: "Categories", icon: "🏷️" },
+    { path: "control_products", label: "المنتجات", icon: "📦" },
+    { path: "orders", label: "الطلبات", icon: "📋" },
+    { path: "categories", label: "الفئات", icon: "🏷️" },
   ];
 
   return (
     <div className="min-h-fit  bg-gray-50">
       {/* topbar */}
       <div className="   flex  bg-secondary justify-between items-center px-4 shadow-lg">
-        <h1 className="text-2xl font-bold text-gray-800 ">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-800 ">لوحة التحكم</h1>
         <nav className=" flex h-fit ">
           {navItems.map((item) => (
             <NavLink

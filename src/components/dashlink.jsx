@@ -19,7 +19,7 @@ function DashboardLink() {
     }
   }, []);
 
-  return isAdmin ? <NavLink to="dashboard">Dashboard</NavLink> : null;
+  return isAdmin ? <NavLink to="dashboard">لوحة التحكم</NavLink> : null;
 }
 
 export default DashboardLink;

@@ -36,7 +36,7 @@ export default function Products() {
         `${BACKEND_URL}/api/products?${queryParams.toString()}`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch products");
+        throw new Error("فشل في جلب العقارات");
       }
       return response.json();
     },
@@ -55,16 +55,16 @@ export default function Products() {
       });
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to add to cart");
+        throw new Error(error.message || "فشل في إضافة العقار للمفضلة");
       }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
-      toast.success("Added to cart successfully!");
+      toast.success("تم إضافة العقار للمفضلة بنجاح!");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to add to cart");
+      toast.error(error.message || "فشل في إضافة العقار للمفضلة");
     },
   });
 
@@ -115,7 +115,7 @@ export default function Products() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="flex flex-col items-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          <p className="text-gray-600">Loading amazing products...</p>
+          <p className="text-gray-600">جاري تحميل العقارات الرائعة...</p>
         </div>
       </div>
     );
@@ -131,11 +131,11 @@ export default function Products() {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Discover Our Collection
+            اكتشف عقاراتنا
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore our curated selection of premium products, crafted with care
-            and designed for excellence.
+            استكشف مجموعتنا المختارة من العقارات المميزة، مصممة لتلبية جميع
+            احتياجاتك مع ضمان الجودة والموثوقية.
           </p>
         </motion.div>
 
@@ -150,7 +150,7 @@ export default function Products() {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="البحث في العقارات..."
                   onChange={(e) => handleSearch(e.target.value)}
                   className="w-full px-4 py-3 pl-12 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 />
@@ -166,7 +166,7 @@ export default function Products() {
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
                 className="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors flex items-center gap-2"
               >
-                <span>Filters</span>
+                <span>المرشحات</span>
                 <span>{isFilterOpen ? "▲" : "▼"}</span>
               </motion.button>
               <motion.button
@@ -175,7 +175,7 @@ export default function Products() {
                 onClick={clearFilters}
                 className="px-4 py-3 text-gray-600 hover:text-gray-800"
               >
-                Clear All
+                مسح الكل
               </motion.button>
             </div>
           </div>
@@ -191,12 +191,12 @@ export default function Products() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-100">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Price Range
+                      نطاق السعر
                     </label>
                     <div className="flex gap-2">
                       <input
                         type="number"
-                        placeholder="Min"
+                        placeholder="الحد الأدنى"
                         value={filters.minPrice}
                         onChange={(e) =>
                           handlePriceChange("minPrice", e.target.value)
@@ -205,7 +205,7 @@ export default function Products() {
                       />
                       <input
                         type="number"
-                        placeholder="Max"
+                        placeholder="الحد الأقصى"
                         value={filters.maxPrice}
                         onChange={(e) =>
                           handlePriceChange("maxPrice", e.target.value)
@@ -216,7 +216,7 @@ export default function Products() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Sort By
+                      ترتيب حسب
                     </label>
                     <select
                       value={`${filters.sort}-${filters.order}`}
@@ -226,12 +226,12 @@ export default function Products() {
                       }}
                       className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
-                      <option value="createdAt-desc">Newest First</option>
-                      <option value="createdAt-asc">Oldest First</option>
-                      <option value="price-asc">Price: Low to High</option>
-                      <option value="price-desc">Price: High to Low</option>
-                      <option value="name-asc">Name: A to Z</option>
-                      <option value="name-desc">Name: Z to A</option>
+                      <option value="createdAt-desc">الأحدث أولاً</option>
+                      <option value="createdAt-asc">الأقدم أولاً</option>
+                      <option value="price-asc">السعر: من الأقل للأعلى</option>
+                      <option value="price-desc">السعر: من الأعلى للأقل</option>
+                      <option value="name-asc">الاسم: أ إلى ي</option>
+                      <option value="name-desc">الاسم: ي إلى أ</option>
                     </select>
                   </div>
                 </div>

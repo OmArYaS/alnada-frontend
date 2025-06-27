@@ -10,9 +10,8 @@ export default function EditProductModal({ isOpen, onClose, id }) {
   const { token } = useAuth();
   const [form, setForm] = useState({
     name: "",
-    brand: "",
+    address: "",
     stock: "",
-    color: [],
     size: "",
     price: "",
     description: "",
@@ -22,7 +21,6 @@ export default function EditProductModal({ isOpen, onClose, id }) {
   const [errors, setErrors] = useState({});
   const [previews, setPreviews] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
-  const [newColor, setNewColor] = useState("");
   const {
     data: categories = [],
     isLoading: categoriesLoading,
@@ -44,13 +42,8 @@ export default function EditProductModal({ isOpen, onClose, id }) {
             const product = await response.json();
             setForm({
               name: product.name || "",
-              brand: product.brand || "",
+              address: product.address || "",
               stock: product.stock || "",
-              color: Array.isArray(product.color)
-                ? product.color
-                : product.color
-                ? [product.color]
-                : [],
               size: product.size || "",
               price: product.price || "",
               description: product.description || "",
@@ -71,13 +64,12 @@ export default function EditProductModal({ isOpen, onClose, id }) {
     mutationFn: editProductMutationFn,
     onSuccess: () => {
       queryClient.invalidateQueries(["products"]);
-      toast.success("Product updated successfully");
+      toast.success("Property updated successfully");
       onClose();
       setForm({
         name: "",
-        brand: "",
+        address: "",
         stock: "",
-        color: [],
         size: "",
         price: "",
         description: "",
@@ -86,15 +78,18 @@ export default function EditProductModal({ isOpen, onClose, id }) {
       });
       setPreviews([]);
       setExistingImages([]);
-      setNewColor("");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update product");
+      toast.error(error.message || "Failed to update property");
     },
   });
 
   const validateForm = () => {
     const newErrors = {};
+    if (!form.name) newErrors.name = "Name is required";
+    if (!form.address) newErrors.address = "Address is required";
+    if (!form.stock) newErrors.stock = "Stock is required";
+    if (!form.size) newErrors.size = "Size is required";
     if (form.price && isNaN(form.price))
       newErrors.price = "Price must be a number";
     if (form.stock && isNaN(form.stock))
@@ -138,32 +133,11 @@ export default function EditProductModal({ isOpen, onClose, id }) {
         value.forEach((img) => {
           formData.append("images", img);
         });
-      } else if (key === "color") {
-        value.forEach((color) => {
-          formData.append("color", color);
-        });
       } else if (value !== "" && value !== null) {
         formData.append(key, value);
       }
     });
     editProductMutation.mutate({ formData, token, id });
-  };
-
-  const addColor = () => {
-    if (newColor.trim() && !form.color.includes(newColor.trim())) {
-      setForm((prev) => ({
-        ...prev,
-        color: [...prev.color, newColor.trim()],
-      }));
-      setNewColor("");
-    }
-  };
-
-  const removeColor = (colorToRemove) => {
-    setForm((prev) => ({
-      ...prev,
-      color: prev.color.filter((color) => color !== colorToRemove),
-    }));
   };
 
   if (!isOpen) return null;
@@ -184,7 +158,9 @@ export default function EditProductModal({ isOpen, onClose, id }) {
         >
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Edit Product</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Edit Property
+              </h2>
               <button
                 onClick={onClose}
                 className="text-gray-500 hover:text-gray-700"
@@ -206,7 +182,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                     className={`w-full px-4 py-2 rounded-lg border ${
                       errors.name ? "border-red-500" : "border-gray-300"
                     } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="Product name"
+                    placeholder="Property name"
                   />
                   {errors.name && (
                     <p className="mt-1 text-sm text-red-500">{errors.name}</p>
@@ -215,15 +191,22 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Brand
+                    Address *
                   </label>
                   <input
-                    name="brand"
-                    value={form.brand}
+                    name="address"
+                    value={form.address}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Brand name"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.address ? "border-red-500" : "border-gray-300"
+                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    placeholder="Property address"
                   />
+                  {errors.address && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.address}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -247,7 +230,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Stock
+                    Stock *
                   </label>
                   <input
                     name="stock"
@@ -266,61 +249,20 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Color
-                  </label>
-                  <div className="space-y-2">
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={newColor}
-                        onChange={(e) => setNewColor(e.target.value)}
-                        onKeyPress={(e) =>
-                          e.key === "Enter" && (e.preventDefault(), addColor())
-                        }
-                        className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Add a color"
-                      />
-                      <button
-                        type="button"
-                        onClick={addColor}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        Add
-                      </button>
-                    </div>
-                    {form.color.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {form.color.map((color, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                          >
-                            {color}
-                            <button
-                              type="button"
-                              onClick={() => removeColor(color)}
-                              className="text-blue-600 hover:text-blue-800"
-                            >
-                              ×
-                            </button>
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Size
+                    Size *
                   </label>
                   <input
                     name="size"
                     value={form.size}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Size"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.size ? "border-red-500" : "border-gray-300"
+                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    placeholder="Property size"
                   />
+                  {errors.size && (
+                    <p className="mt-1 text-sm text-red-500">{errors.size}</p>
+                  )}
                 </div>
 
                 <div className="md:col-span-2">
@@ -359,7 +301,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                     onChange={handleChange}
                     rows="3"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Product description"
+                    placeholder="Property description"
                   />
                 </div>
 
@@ -406,14 +348,10 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                       </div>
                     )}
                   </div>
-                  <p className="mt-1 text-xs text-gray-500">
-                    Upload new images to replace existing ones. Leave empty to
-                    keep current images.
-                  </p>
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-4 mt-6">
+              <div className="flex justify-end space-x-3 pt-4">
                 <button
                   type="button"
                   onClick={onClose}
@@ -421,17 +359,15 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                 >
                   Cancel
                 </button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <button
                   type="submit"
                   disabled={editProductMutation.isPending}
                   className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
                 >
                   {editProductMutation.isPending ? (
-                    <span className="flex items-center">
+                    <div className="flex items-center space-x-2">
                       <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        className="animate-spin h-4 w-4"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -450,12 +386,12 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Updating...
-                    </span>
+                      <span>Updating...</span>
+                    </div>
                   ) : (
-                    "Update Product"
+                    "Update Property"
                   )}
-                </motion.button>
+                </button>
               </div>
             </form>
           </div>

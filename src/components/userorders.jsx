@@ -289,14 +289,6 @@ export default function UserOrders() {
                               <p className="text-gray-600">
                                 Price: ${item.productId.price}
                               </p>
-                              {item.color && (
-                                <p className="text-gray-600">
-                                  Color:{" "}
-                                  <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs">
-                                    {item.color}
-                                  </span>
-                                </p>
-                              )}
                             </div>
                           </div>
                           <div className="text-right">

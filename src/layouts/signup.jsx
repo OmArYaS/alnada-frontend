@@ -28,10 +28,8 @@ export default function Register() {
           transition={{ delay: 0.2 }}
           className="text-center mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Create Your Account
-          </h1>
-          <p className="text-gray-600">Join us and start shopping today</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">إنشاء حسابك</h1>
+          <p className="text-gray-600">انضم إلينا وابدأ التسوق اليوم</p>
         </motion.div>
 
         {actionData?.error && (
@@ -57,7 +55,7 @@ export default function Register() {
                 htmlFor="username"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Full Name
+                الاسم الكامل
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -71,7 +69,7 @@ export default function Register() {
                   minLength={3}
                   maxLength={50}
                   className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                  placeholder="Enter your full name"
+                  placeholder="أدخل اسمك الكامل"
                 />
               </div>
             </motion.div>
@@ -86,7 +84,7 @@ export default function Register() {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Email Address
+                البريد الإلكتروني
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -98,7 +96,7 @@ export default function Register() {
                   type="email"
                   required
                   className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                  placeholder="Enter your email"
+                  placeholder="أدخل بريدك الإلكتروني"
                 />
               </div>
             </motion.div>
@@ -113,7 +111,7 @@ export default function Register() {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Password
+                كلمة المرور
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -126,7 +124,7 @@ export default function Register() {
                   required
                   minLength={6}
                   className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                  placeholder="Create a password"
+                  placeholder="أنشئ كلمة مرور"
                 />
               </div>
             </motion.div>
@@ -141,7 +139,7 @@ export default function Register() {
                 htmlFor="age"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Age
+                العمر
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -155,7 +153,7 @@ export default function Register() {
                   min="18"
                   max="100"
                   className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                  placeholder="Enter your age"
+                  placeholder="أدخل عمرك"
                 />
               </div>
             </motion.div>
@@ -170,7 +168,7 @@ export default function Register() {
                 htmlFor="phone"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Phone Number
+                رقم الهاتف
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -182,12 +180,12 @@ export default function Register() {
                   type="tel"
                   required
                   pattern="^01[0125][0-9]{8}$"
-                  title="Please enter a valid Egyptian phone number starting with 010, 011, 012, or 015"
+                  title="يرجى إدخال رقم هاتف مصري صحيح يبدأ بـ 010 أو 011 أو 012 أو 015"
                   className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                  placeholder="Enter your phone number"
+                  placeholder="أدخل رقم هاتفك"
                 />
               </div>
-              <p className="mt-1 text-sm text-gray-500">Format: 01XXXXXXXXX</p>
+              <p className="mt-1 text-sm text-gray-500">التنسيق: 01XXXXXXXXX</p>
             </motion.div>
 
             <motion.div
@@ -200,7 +198,7 @@ export default function Register() {
                 htmlFor="address"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Address
+                العنوان
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -213,7 +211,7 @@ export default function Register() {
                   required
                   minLength={5}
                   className="pl-10 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                  placeholder="Enter your address"
+                  placeholder="أدخل عنوانك"
                 />
               </div>
             </motion.div>
@@ -248,23 +246,23 @@ export default function Register() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Creating account...
+                جاري إنشاء الحساب...
               </span>
             ) : (
               <>
-                Create Account
+                إنشاء حساب
                 <FiArrowRight className="h-5 w-5" />
               </>
             )}
           </motion.button>
 
           <p className="text-center text-sm text-gray-600 mt-6">
-            Already have an account?{" "}
+            لديك حساب بالفعل؟{" "}
             <Link
               to="/auth/login"
               className="text-blue-600 hover:text-blue-700 font-medium inline-flex items-center gap-1 group"
             >
-              Login here
+              سجل دخولك هنا
               <FiArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </p>

@@ -21,7 +21,7 @@ export default function Productcard({ item }) {
     >
       {isOutOfStock && (
         <div className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold z-10">
-          Out of Stock
+          محجوز
         </div>
       )}
       <NavLink
@@ -64,7 +64,7 @@ export default function Productcard({ item }) {
           </div>
           <div className="flex items-center justify-between w-full">
             <p className="text-xl font-bold text-primary">
-              <span className="font-roboto font-normal">EGP </span>
+              <span className="font-roboto font-normal">جنيه مصري </span>
               {item.price}
             </p>
           </div>
@@ -81,7 +81,7 @@ export default function Productcard({ item }) {
         onClick={() => !isOutOfStock && addToCart(item._id, 1, navigate)}
       >
         <i className="fi fi-rr-shopping-cart"></i>
-        {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+        {isOutOfStock ? "محجوز" : "أضف للمفضلة"}
       </motion.button>
     </motion.div>
   );

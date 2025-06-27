@@ -10,8 +10,8 @@ export default function Section() {
     refetchOnWindowFocus: true,
   });
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (isLoading) return <p>جاري التحميل...</p>;
+  if (error) return <p>خطأ: {error.message}</p>;
   return (
     <div className="section flex flex-col justify-center w-full">
       <div className="relative">

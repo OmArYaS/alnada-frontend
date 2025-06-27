@@ -8,12 +8,12 @@ export default function Cart() {
     return location.pathname === path;
   };
 
-    return (
+  return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
       {/* Sidebar Navigation */}
       <div className="w-full md:w-64 bg-white shadow-lg md:min-h-screen">
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6">My Account</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">حسابي</h1>
           <nav className="space-y-2 ">
             <Link
               to="/cart/addedproductbyuser"
@@ -23,8 +23,8 @@ export default function Cart() {
                   : "text-gray-600 hover:bg-gray-50"
               }`}
             >
-              <span className="text-xl">🛒</span>
-              <span className="font-medium">Shopping Cart</span>
+              <span className="text-xl">❤️</span>
+              <span className="font-medium">العقارات المفضلة</span>
             </Link>
             <Link
               to="/cart/userorders"
@@ -34,8 +34,8 @@ export default function Cart() {
                   : "text-gray-600 hover:bg-gray-50"
               }`}
             >
-              <span className="text-xl">📦</span>
-              <span className="font-medium">My Orders</span>
+              <span className="text-xl">📋</span>
+              <span className="font-medium">طلباتي</span>
             </Link>
           </nav>
         </div>

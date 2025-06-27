@@ -34,7 +34,7 @@ export default function Account() {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch user data");
+        throw new Error("فشل في جلب بيانات المستخدم");
       }
       const data = await response.json();
       setFormData({
@@ -65,7 +65,7 @@ export default function Account() {
       );
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to update profile");
+        throw new Error(error.message || "فشل في تحديث الملف الشخصي");
       }
       return response.json();
     },
@@ -105,7 +105,7 @@ export default function Account() {
       >
         <div className="bg-secondary rounded-2xl shadow-xl p-8">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">My Account</h1>
+            <h1 className="text-3xl font-bold text-gray-800">حسابي</h1>
             <div className="space-x-4">
               {!isEditing && (
                 <motion.button
@@ -114,7 +114,7 @@ export default function Account() {
                   onClick={() => setIsEditing(true)}
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  Edit Profile
+                  تعديل الملف الشخصي
                 </motion.button>
               )}
               <motion.button
@@ -127,7 +127,7 @@ export default function Account() {
                 }}
                 className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
               >
-                Logout
+                تسجيل الخروج
               </motion.button>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function Account() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-green-50 text-green-500 p-4 rounded-lg mb-6"
             >
-              Profile updated successfully!
+              تم تحديث الملف الشخصي بنجاح!
             </motion.div>
           )}
 
@@ -166,7 +166,7 @@ export default function Account() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
+                  الاسم الكامل
                 </label>
                 <input
                   type="text"
@@ -180,7 +180,7 @@ export default function Account() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
+                  البريد الإلكتروني
                 </label>
                 <input
                   type="email"
@@ -194,7 +194,7 @@ export default function Account() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number
+                  رقم الهاتف
                 </label>
                 <input
                   type="tel"
@@ -209,7 +209,7 @@ export default function Account() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Age
+                  العمر
                 </label>
                 <input
                   type="number"
@@ -224,7 +224,7 @@ export default function Account() {
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Address
+                  العنوان
                 </label>
                 <input
                   type="text"
@@ -247,7 +247,7 @@ export default function Account() {
                   disabled={updateUserMutation.isPending}
                   className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
-                  Cancel
+                  إلغاء
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -278,10 +278,10 @@ export default function Account() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Saving...
+                      جاري الحفظ...
                     </span>
                   ) : (
-                    "Save Changes"
+                    "حفظ التغييرات"
                   )}
                 </motion.button>
               </div>

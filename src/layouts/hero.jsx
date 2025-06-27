@@ -23,7 +23,7 @@ export default function Hero() {
     queryKey: ["featuredProducts"],
     queryFn: () => fetchProducts({ limit: 5 }),
     onError: (error) => {
-      toast.error("Failed to load featured products");
+      toast.error("فشل في تحميل العقارات المميزة");
     },
   });
 
@@ -42,10 +42,10 @@ export default function Hero() {
       <div className="w-[90vw] h-[50vh] flex justify-center items-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            No Featured Products
+            لا توجد عقارات مميزة
           </h2>
           <p className="text-gray-600">
-            Please check back later for our featured items.
+            يرجى العودة لاحقاً للاطلاع على عقاراتنا المميزة.
           </p>
         </div>
       </div>
@@ -100,13 +100,14 @@ export default function Hero() {
                   className="flex items-center gap-4"
                 >
                   <span className="text-2xl font-bold text-primary">
-                   <span className="font-roboto">EGP</span> {item.price}
+                    <span className="font-roboto font-normal">جنيه مصري </span>{" "}
+                    {item.price}
                   </span>
                   <Link
                     to={`/product/${item._id}`}
                     className="bg-primary text-white rounded-xl px-6 py-2 hover:bg-primary/90 transition-colors"
                   >
-                    View Details
+                    عرض التفاصيل
                   </Link>
                 </motion.div>
               </div>
@@ -129,7 +130,7 @@ export default function Hero() {
                         alt={item.name}
                         className="max-h-full max-w-full object-cover  rounded-lg shadow-xl"
                       />
-                      
+
                       {images.length > 1 && (
                         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 bg-white/70 rounded-md px-2 py-1 shadow">
                           {images.slice(0, 4).map((img, idx) => (

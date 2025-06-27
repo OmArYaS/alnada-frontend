@@ -151,7 +151,7 @@ export default function AddProduct({ isOpen, onClose, onSuccess }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    السعر (جنيه مصري) *
+                    السعر (EGP) *
                   </label>
                   <input
                     type="number"

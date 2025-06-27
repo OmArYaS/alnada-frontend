@@ -64,7 +64,7 @@ export default function Productcard({ item }) {
           </div>
           <div className="flex items-center justify-between w-full">
             <p className="text-xl font-bold text-primary">
-              <span className="font-roboto font-normal">جنيه مصري </span>
+              <span className="font-roboto font-normal">EGP </span>
               {item.price}
             </p>
           </div>

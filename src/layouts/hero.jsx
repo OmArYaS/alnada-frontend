@@ -100,7 +100,7 @@ export default function Hero() {
                   className="flex items-center gap-4"
                 >
                   <span className="text-2xl font-bold text-primary">
-                    <span className="font-roboto font-normal">جنيه مصري </span>{" "}
+                    <span className="font-roboto font-normal">EGP </span>{" "}
                     {item.price}
                   </span>
                   <Link

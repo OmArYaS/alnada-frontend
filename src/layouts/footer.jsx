@@ -11,7 +11,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-white text-lg font-bold mb-4">ميا العقارية</h3>
+            <h3 className="text-white text-lg font-bold mb-4">
+              الندي للتسويق العقاري
+            </h3>
             <p className="text-sm">
               وجهتك الموثوقة للعقارات والاستثمارات العقارية. نقدم لك أفضل الفرص
               العقارية مع ضمان الجودة والموثوقية.
@@ -20,7 +22,7 @@ export default function Footer() {
               <motion.a
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                href="https://facebook.com"
+                href="https://www.facebook.com/share/16ida8htrq/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
@@ -156,7 +158,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm">
-              © {currentYear} ميا العقارية. جميع الحقوق محفوظة.
+              © {currentYear} الندي للتسويق العقاري. جميع الحقوق محفوظة.
             </p>
             <div className="flex space-x-6">
               {/* <img src="/visa.svg" alt="Visa" className="h-6" />

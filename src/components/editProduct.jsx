@@ -5,6 +5,7 @@ import { useCategories } from "../hooks/useCategories";
 import { useAuth } from "../hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
+import { BACKEND_URL } from "../service/queryfn.js";
 
 export default function EditProductModal({ isOpen, onClose, id }) {
   const { token } = useAuth();
@@ -33,11 +34,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
     if (isOpen && id) {
       const fetchProduct = async () => {
         try {
-          const response = await fetch(
-            `${
-              process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"
-            }/api/products/${id}`
-          );
+          const response = await fetch(`${BACKEND_URL}/api/products/${id}`);
           if (response.ok) {
             const product = await response.json();
             setForm({
@@ -86,10 +83,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!form.name) newErrors.name = "Name is required";
-    if (!form.address) newErrors.address = "Address is required";
-    if (!form.stock) newErrors.stock = "Stock is required";
-    if (!form.size) newErrors.size = "Size is required";
+    // Only validate number fields if they have values
     if (form.price && isNaN(form.price))
       newErrors.price = "Price must be a number";
     if (form.stock && isNaN(form.stock))
@@ -130,10 +124,14 @@ export default function EditProductModal({ isOpen, onClose, id }) {
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => {
       if (key === "images") {
-        value.forEach((img) => {
-          formData.append("images", img);
-        });
-      } else if (value !== "" && value !== null) {
+        // Only append images if new ones are selected
+        if (value && value.length > 0) {
+          value.forEach((img) => {
+            formData.append("images", img);
+          });
+        }
+      } else if (value !== "" && value !== null && value !== undefined) {
+        // Only append non-empty values
         formData.append(key, value);
       }
     });
@@ -170,10 +168,16 @@ export default function EditProductModal({ isOpen, onClose, id }) {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-700">
+                  💡 جميع الحقول اختيارية. سيتم تحديث الحقول المملوءة فقط.
+                </p>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Name *
+                    Name
                   </label>
                   <input
                     name="name"
@@ -191,7 +195,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address *
+                    Address
                   </label>
                   <input
                     name="address"
@@ -230,7 +234,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Stock *
+                    Stock
                   </label>
                   <input
                     name="stock"
@@ -249,7 +253,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Size *
+                    Size
                   </label>
                   <input
                     name="size"

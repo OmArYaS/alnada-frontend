@@ -6,6 +6,7 @@ export default function Dashboard() {
     { path: "control_products", label: "المنتجات", icon: "📦" },
     { path: "orders", label: "الطلبات", icon: "📋" },
     { path: "categories", label: "الفئات", icon: "🏷️" },
+    { path: "contacts", label: "الرسائل", icon: "💬" },
   ];
 
   return (

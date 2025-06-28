@@ -194,13 +194,17 @@ export default function TableControlProducts({
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex space-x-2">
                     <button
-                      onClick={() => setShowEditModal(product._id)}
+                      onClick={() =>
+                        setShowEditModal({ show: true, id: product._id })
+                      }
                       className="text-indigo-600 hover:text-indigo-900 transition-colors"
                     >
                       تعديل
                     </button>
                     <button
-                      onClick={() => setShowDeleteModal(product._id)}
+                      onClick={() =>
+                        setShowDeleteModal({ show: true, id: product._id })
+                      }
                       className="text-red-600 hover:text-red-900 transition-colors"
                     >
                       حذف

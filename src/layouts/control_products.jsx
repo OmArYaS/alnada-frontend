@@ -20,8 +20,11 @@ export default function ControlProducts() {
     maxPrice: "",
   });
   const [showModal, setShowModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState({ show: false, id: null });
+  const [showDeleteModal, setShowDeleteModal] = useState({
+    show: false,
+    id: null,
+  });
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["products", filters],
@@ -66,12 +69,12 @@ export default function ControlProducts() {
       <AddProductModal isOpen={showModal} onClose={() => setShowModal(false)} />
       <EditProductModal
         isOpen={showEditModal.show}
-        onClose={() => setShowEditModal(false)}
+        onClose={() => setShowEditModal({ show: false, id: null })}
         id={showEditModal.id}
       />
       <DeleteProductModal
         isOpen={showDeleteModal.show}
-        onClose={() => setShowDeleteModal(false)}
+        onClose={() => setShowDeleteModal({ show: false, id: null })}
         id={showDeleteModal.id}
       />
     </div>

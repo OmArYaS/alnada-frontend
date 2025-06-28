@@ -405,7 +405,7 @@ export default function Orders() {
                         {order.userId?.address}
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
-                        ${order.totalAmount}
+                        ج.م{order.totalAmount}
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
                         <select

@@ -23,6 +23,13 @@ import ErrorBoundary from "../components/ErrorBoundary";
 import RouteError from "../components/RouteError.jsx";
 import { BACKEND_URL } from "../service/queryfn.js";
 import ContactUs from "../pages/contactus.jsx";
+import Contacts from "../pages/contacts.jsx";
+import FAQ from "../pages/faq.jsx";
+import Shipping from "../pages/shipping.jsx";
+import Returns from "../pages/returns.jsx";
+import Privacy from "../pages/privacy.jsx";
+import Terms from "../pages/terms.jsx";
+
 export default createBrowserRouter([
   {
     path: "/",
@@ -58,6 +65,10 @@ export default createBrowserRouter([
           {
             path: "categories",
             Component: ControlCategory,
+          },
+          {
+            path: "contacts",
+            Component: Contacts,
           },
         ],
       },
@@ -108,6 +119,26 @@ export default createBrowserRouter([
       {
         path: "/contact",
         Component: ContactUs,
+      },
+      {
+        path: "/faq",
+        Component: FAQ,
+      },
+      {
+        path: "/shipping",
+        Component: Shipping,
+      },
+      {
+        path: "/returns",
+        Component: Returns,
+      },
+      {
+        path: "/privacy",
+        Component: Privacy,
+      },
+      {
+        path: "/terms",
+        Component: Terms,
       },
     ],
   },

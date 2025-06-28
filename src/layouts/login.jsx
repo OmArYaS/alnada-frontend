@@ -1,7 +1,6 @@
 import { Form, useActionData, useNavigation, Link } from "react-router";
 import { motion } from "framer-motion";
 import { FiMail, FiLock, FiArrowRight } from "react-icons/fi";
-import logo from "../../public/logo.png";
 
 export default function Login() {
   const error = useActionData();
@@ -17,8 +16,8 @@ export default function Login() {
       >
         <div className="flex flex-col items-center mb-6">
           <img
-            src={logo}
-            alt="MYA Bags Logo"
+            src="/logo.png"
+            alt="الندي للتسويق العقاري"
             className="w-32 h-32 object-contain mb-2 drop-shadow-md rounded-2xl"
             style={{ filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.08))" }}
           />

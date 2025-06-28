@@ -1,6 +1,27 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router";
 
 export default function About() {
+  const navigate = useNavigate();
+
+  const handleLearnMore = () => {
+    // Scroll to features section
+    const featuresSection = document.querySelector(".features-section");
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleContactUs = () => {
+    // Navigate to contact page
+    navigate("/contact");
+  };
+
+  const handleExploreProperties = () => {
+    // Navigate to products page
+    navigate("/products");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-secondary to-primary text-gray-800">
       {/* Hero Section */}
@@ -31,20 +52,24 @@ export default function About() {
                 مهمتنا
               </h2>
               <p className="text-lg text-gray-700 leading-relaxed">
-                ولدت من شغف العقارات والاستثمار، تجلب لك ميا العقارية أفضل الفرص
-                العقارية. نؤمن أن كل عقار يحكي قصة، ونحن هنا لمساعدتك في تحقيق
-                حلمك العقاري.
+                ولدت من شغف العقارات والاستثمار، تجلب لك الندي للتسويق العقاري
+                أفضل الفرص العقارية. نؤمن أن كل عقار يحكي قصة، ونحن هنا لمساعدتك
+                في تحقيق حلمك العقاري.
               </p>
               <div className="flex gap-4">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
-                  className="bg-primary text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all"
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleLearnMore}
+                  className="bg-primary text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all font-bold"
                 >
                   اعرف المزيد
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
-                  className="border-2 border-primary text-primary px-6 py-3 rounded-full hover:bg-primary/10 transition-all"
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleContactUs}
+                  className="border-2 border-primary text-primary px-6 py-3 rounded-full hover:bg-primary/10 transition-all font-bold"
                 >
                   اتصل بنا
                 </motion.button>
@@ -69,10 +94,10 @@ export default function About() {
       </div>
 
       {/* Features Section */}
-      <div className="py-20 px-4 bg-white/20 backdrop-blur-sm">
+      <div className="features-section py-20 px-4 bg-white/20 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-center text-primary mb-16">
-            لماذا تختار ميا العقارية؟
+            لماذا تختار الندي للتسويق العقاري؟
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -169,7 +194,9 @@ export default function About() {
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
-              className="bg-primary text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all"
+              whileTap={{ scale: 0.95 }}
+              onClick={handleExploreProperties}
+              className="bg-primary text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all font-bold text-lg"
             >
               استكشف العقارات
             </motion.button>

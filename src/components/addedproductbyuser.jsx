@@ -22,7 +22,7 @@ export default function AddedProductByUser() {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch cart");
+        throw new Error("فشل في جلب محتويات السلة");
       }
       return response.json();
     },
@@ -41,13 +41,13 @@ export default function AddedProductByUser() {
       });
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to update cart");
+        throw new Error(error.message || "فشل في تحديث السلة");
       }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
-      toast.success("Cart updated successfully");
+      toast.success("تم تحديث السلة بنجاح");
     },
   });
 
@@ -65,13 +65,13 @@ export default function AddedProductByUser() {
       );
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to remove item");
+        throw new Error(error.message || "فشل في إزالة العقار");
       }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
-      toast.success("Item removed from cart");
+      toast.success("تم إزالة العقار من السلة");
     },
   });
 
@@ -86,13 +86,13 @@ export default function AddedProductByUser() {
       });
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to clear cart");
+        throw new Error(error.message || "فشل في تفريغ السلة");
       }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
-      toast.success("Cart cleared successfully");
+      toast.success("تم تفريغ السلة بنجاح");
     },
   });
 
@@ -107,7 +107,7 @@ export default function AddedProductByUser() {
       });
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Checkout failed");
+        throw new Error(error.message || "فشل في إتمام الطلب");
       }
       return response.json();
     },
@@ -116,7 +116,7 @@ export default function AddedProductByUser() {
 
       if (data.availableProducts?.length > 0) {
         toast.success(
-          `Successfully ordered ${data.availableProducts.length} items. Total: $${data.totalAmount}`
+          `تم طلب ${data.availableProducts.length} عقار بنجاح. المجموع: ${data.totalAmount} جنيه مصري`
         );
       }
 
@@ -127,7 +127,7 @@ export default function AddedProductByUser() {
       }
     },
     onError: (error) => {
-      toast.error(error.message || "Checkout failed");
+      toast.error(error.message || "فشل في إتمام الطلب");
     },
   });
 
@@ -140,8 +140,8 @@ export default function AddedProductByUser() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          <p className="text-gray-600">Loading your cart...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <p className="text-gray-600">جاري تحميل السلة...</p>
         </div>
       </div>
     );
@@ -154,20 +154,20 @@ export default function AddedProductByUser() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-secondary rounded-2xl shadow-xl p-8 text-center"
+            className="bg-white rounded-2xl shadow-xl p-8 text-center"
           >
-            <div className="text-6xl mb-4">🛒</div>
+            <div className="text-6xl mb-4">🏠</div>
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-              Your Cart is Empty
+              السلة فارغة
             </h2>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              Add some products to your cart to see them here.
+              أضف بعض العقارات إلى سلتك لرؤيتها هنا.
             </p>
             <Link
               to="/products"
-              className="inline-block bg-primary  text-white px-8 py-3 rounded-lg hover:contrast-125  transition-colors shadow-md hover:shadow-lg"
+              className="inline-block bg-primary text-white px-8 py-3 rounded-xl hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg"
             >
-              Continue Shopping
+              استمر في التصفح
             </Link>
           </motion.div>
         </div>
@@ -176,31 +176,29 @@ export default function AddedProductByUser() {
   }
 
   return (
-    <div className="h-full">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8">
+      <div className="max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-secondary rounded-2xl shadow-xl p-6 md:p-8"
+          className="bg-white rounded-2xl shadow-xl p-6 md:p-8"
         >
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-              Shopping Cart
+              سلة العقارات
             </h1>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => {
-                if (
-                  window.confirm("Are you sure you want to clear your cart?")
-                ) {
+                if (window.confirm("هل أنت متأكد من تفريغ السلة؟")) {
                   clearCartMutation.mutate();
                 }
               }}
               disabled={clearCartMutation.isPending}
-              className="text-red-600 hover:text-red-700 font-medium flex items-center space-x-2"
+              className="text-red-600 hover:text-red-700 font-medium flex items-center gap-2"
             >
-              <span>Clear Cart</span>
+              <span>تفريغ السلة</span>
               <span>🗑️</span>
             </motion.button>
           </div>
@@ -213,9 +211,9 @@ export default function AddedProductByUser() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
-                  className="flex flex-col md:flex-row items-center justify-between p-4 bg-gray-50 rounded-lg hover:shadow-md transition-shadow"
+                  className="flex flex-col md:flex-row items-center justify-between p-6 bg-gray-50 rounded-xl hover:shadow-md transition-all duration-300"
                 >
-                  <div className="flex items-center space-x-4 mb-4 md:mb-0">
+                  <div className="flex items-center gap-4 mb-4 md:mb-0">
                     {(() => {
                       const images =
                         item.product.images && item.product.images.length > 0
@@ -223,17 +221,12 @@ export default function AddedProductByUser() {
                           : [item.product.image];
                       const mainImage = images[0];
                       return (
-                        <div className="relative w-20 h-20 flex items-center justify-center">
+                        <div className="relative w-24 h-24 flex items-center justify-center">
                           <img
                             src={mainImage}
                             alt={item.product.name}
-                            className="w-20 h-20 object-cover rounded-lg shadow-sm"
+                            className="w-24 h-24 object-cover rounded-xl shadow-sm"
                           />
-                          {/* {images.length > 1 && (
-                            <span className="absolute top-0 right-0 bg-black bg-opacity-60 text-white text-xs px-1.5 py-0.5 rounded-full z-10">
-                              {images.length}
-                            </span>
-                          )} */}
                           {images.length > 1 && (
                             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-0.5 bg-white/80 rounded px-1 py-0.5 shadow">
                               {images.slice(0, 3).map((img, idx) => (
@@ -241,7 +234,7 @@ export default function AddedProductByUser() {
                                   key={idx}
                                   src={img}
                                   alt={
-                                    item.product.name + " thumb " + (idx + 1)
+                                    item.product.name + " مصغرة " + (idx + 1)
                                   }
                                   className="w-4 h-4 object-cover rounded"
                                 />
@@ -252,16 +245,28 @@ export default function AddedProductByUser() {
                       );
                     })()}
                     <div>
-                      <h3 className="font-medium text-gray-800">
+                      <h3 className="font-bold text-gray-800 text-lg">
                         {item.product.name}
                       </h3>
-                      <p className="text-gray-600">${item.product.price}</p>
+                      <p className="text-primary font-bold text-lg">
+                        {item.product.price} جنيه مصري
+                      </p>
+                      {item.product.address && (
+                        <p className="text-gray-600 text-sm mt-1">
+                          📍 {item.product.address}
+                        </p>
+                      )}
+                      {item.product.size && (
+                        <p className="text-gray-600 text-sm">
+                          📐 المساحة: {item.product.size}
+                        </p>
+                      )}
                       {item.product.color &&
                         Array.isArray(item.product.color) &&
                         item.product.color.length > 0 && (
                           <div className="mt-2">
                             <label className="block text-xs font-medium text-gray-700 mb-1">
-                              Color:
+                              اللون:
                             </label>
                             <div className="flex flex-wrap gap-1">
                               {item.product.color.map((color) => (
@@ -277,8 +282,8 @@ export default function AddedProductByUser() {
                                   disabled={updateCartMutation.isPending}
                                   className={`px-2 py-1 rounded text-xs border transition-all duration-200 ${
                                     item.color === color
-                                      ? "border-blue-500 bg-blue-500 text-white"
-                                      : "border-gray-300 hover:border-blue-300"
+                                      ? "border-primary bg-primary text-white"
+                                      : "border-gray-300 hover:border-primary/50"
                                   }`}
                                 >
                                   {color}
@@ -289,14 +294,14 @@ export default function AddedProductByUser() {
                         )}
                       {item.product.stock < item.quantity && (
                         <p className="text-red-500 text-sm mt-1">
-                          Only {item.product.stock} items available
+                          متوفر {item.product.stock} عقار فقط
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
@@ -312,7 +317,7 @@ export default function AddedProductByUser() {
                       >
                         -
                       </motion.button>
-                      <span className="w-8 text-center font-medium">
+                      <span className="w-8 text-center font-bold text-lg">
                         {item.quantity}
                       </span>
                       <motion.button
@@ -346,9 +351,9 @@ export default function AddedProductByUser() {
                         removeFromCartMutation.mutate(item.product._id)
                       }
                       disabled={removeFromCartMutation.isPending}
-                      className="text-red-600 hover:text-red-700 flex items-center space-x-1"
+                      className="text-red-600 hover:text-red-700 flex items-center gap-1 font-medium"
                     >
-                      <span>Remove</span>
+                      <span>إزالة</span>
                       <span>×</span>
                     </motion.button>
                   </div>
@@ -360,39 +365,39 @@ export default function AddedProductByUser() {
           <div className="mt-8 pt-8 border-t border-gray-200">
             <div className="flex justify-between items-center mb-4">
               <span className="text-lg font-medium text-gray-800">
-                Total Items:
+                إجمالي العقارات:
               </span>
-              <span className="text-lg font-medium text-gray-800">
+              <span className="text-lg font-bold text-gray-800">
                 {cartData.totalQuantity}
               </span>
             </div>
             <div className="flex justify-between items-center mb-8">
               <span className="text-xl font-bold text-gray-800">
-                Total Price:
+                إجمالي السعر:
               </span>
-              <span className="text-xl font-bold text-blue-600">
-                ${cartData.totalPrice}
+              <span className="text-2xl font-bold text-primary">
+                {cartData.totalPrice} جنيه مصري
               </span>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-col sm:flex-row justify-end gap-4">
               <Link
                 to="/products"
-                className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-center"
+                className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors text-center font-medium"
               >
-                Continue Shopping
+                استمر في التصفح
               </Link>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleCheckoutClick}
                 disabled={checkoutMutation.isPending}
-                className="bg-primary text-white px-8 py-3 rounded-lg hover:contrast-125 transition-colors disabled:opacity-50 shadow-md hover:shadow-lg"
+                className="bg-primary text-white px-8 py-3 rounded-xl hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 shadow-md hover:shadow-lg font-bold text-lg"
               >
                 {checkoutMutation.isPending ? (
                   <span className="flex items-center justify-center">
                     <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -411,10 +416,10 @@ export default function AddedProductByUser() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Processing...
+                    جاري المعالجة...
                   </span>
                 ) : (
-                  "Proceed to Checkout"
+                  "إتمام الطلب"
                 )}
               </motion.button>
             </div>

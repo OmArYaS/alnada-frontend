@@ -1,7 +1,7 @@
 import { Form, useActionData, useNavigation, Link } from "react-router";
 import { motion } from "framer-motion";
 import { FiMail, FiLock, FiArrowRight } from "react-icons/fi";
-import logo from "../assets/images/logo.png";
+import logo from "../../public/logo.png";
 
 export default function Login() {
   const error = useActionData();

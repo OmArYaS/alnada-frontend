@@ -22,7 +22,7 @@ export default function AddProduct({ isOpen, onClose, onSuccess }) {
 
   const addProductMutation = useMutation({
     mutationFn: async (formDataToSend) => {
-      const response = await fetch(`${BACKEND_URL}/api/products`, {
+      const response = await fetch(`${BACKEND_URL}/api/products/add`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

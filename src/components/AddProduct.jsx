@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { BACKEND_URL } from "../service/queryfn";
@@ -12,13 +12,26 @@ export default function AddProduct({ isOpen, onClose, onSuccess }) {
     name: "",
     description: "",
     price: "",
-    stock: "",
     size: "",
     address: "",
     category: "",
+    state: "",
+    featured: false,
   });
   const [images, setImages] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch categories from backend
+  const { data: categories, isLoading: categoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await fetch(`${BACKEND_URL}/api/categories`);
+      if (!response.ok) {
+        throw new Error("فشل في جلب أنواع العقارات");
+      }
+      return response.json();
+    },
+  });
 
   const addProductMutation = useMutation({
     mutationFn: async (formDataToSend) => {
@@ -57,10 +70,11 @@ export default function AddProduct({ isOpen, onClose, onSuccess }) {
       name: "",
       description: "",
       price: "",
-      stock: "",
       size: "",
       address: "",
       category: "",
+      state: "",
+      featured: false,
     });
     setImages([]);
   };
@@ -185,15 +199,63 @@ export default function AddProduct({ isOpen, onClose, onSuccess }) {
                     الحالة *
                   </label>
                   <select
-                    name="stock"
-                    value={formData.stock}
+                    name="state"
+                    value={formData.state}
                     onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   >
                     <option value="">اختر الحالة</option>
-                    <option value="1">متاح</option>
-                    <option value="0">محجوز</option>
+                    <option value="متاح">متاح</option>
+                    <option value="محجوز">محجوز</option>
+                    <option value="جديد">جديد</option>
+                    <option value="قديم">قديم</option>
+                    <option value="تحت التشطيب">تحت التشطيب</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="featured"
+                      checked={formData.featured}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          featured: e.target.checked,
+                        }))
+                      }
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      عقار مميز (سيظهر في الصفحة الرئيسية)
+                    </span>
+                  </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    نوع العقار *
+                  </label>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    required
+                    disabled={categoriesLoading}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50"
+                  >
+                    <option value="">
+                      {categoriesLoading
+                        ? "جاري التحميل..."
+                        : "اختر نوع العقار"}
+                    </option>
+                    {categories?.map((category) => (
+                      <option key={category._id} value={category._id}>
+                        {category.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

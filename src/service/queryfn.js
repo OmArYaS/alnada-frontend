@@ -42,6 +42,7 @@ export async function fetchProducts({
   name = "",
   minPrice = "",
   maxPrice = "",
+  featured = "",
 }) {
   const params = new URLSearchParams();
 
@@ -53,6 +54,7 @@ export async function fetchProducts({
   if (name) params.append("name", name);
   if (minPrice) params.append("minPrice", minPrice);
   if (maxPrice) params.append("maxPrice", maxPrice);
+  if (featured) params.append("featured", featured);
 
   const res = await fetch(`${BACKEND_URL}/api/products?${params.toString()}`);
   if (!res.ok) throw new Error("Failed to fetch products");

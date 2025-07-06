@@ -89,15 +89,22 @@ export default function Product() {
                 <span className="bg-primary/90 px-4 py-2 rounded-full font-bold">
                   {data.price} جنيه مصري
                 </span>
-                <span
-                  className={`px-4 py-2 rounded-full font-medium ${
-                    data.stock > 0
-                      ? "bg-green-500/90 text-white"
-                      : "bg-red-500/90 text-white"
-                  }`}
-                >
-                  {data.stock > 0 ? "متاح" : "غير متاح"}
-                </span>
+                {data.state && (
+                  <span
+                    className={`px-4 py-2 rounded-full font-medium ${
+                      data.state === "متاح"
+                        ? "bg-green-500/90 text-white"
+                        : "bg-red-500/90 text-white"
+                    }`}
+                  >
+                    {data.state}
+                  </span>
+                )}
+                {data.featured && (
+                  <span className="px-4 py-2 rounded-full font-medium bg-yellow-500/90 text-white">
+                    ⭐ مميز
+                  </span>
+                )}
               </div>
             </motion.div>
           </div>
@@ -122,14 +129,9 @@ export default function Product() {
                   alt={data.name}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
-                {data.stock <= 5 && data.stock > 0 && (
-                  <div className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                    متبقي {data.stock} فقط!
-                  </div>
-                )}
-                {data.stock === 0 && (
-                  <div className="absolute top-4 right-4 bg-gray-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                    نفذ المخزون
+                {data.state && (
+                  <div className="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                    {data.state}
                   </div>
                 )}
               </div>
@@ -237,33 +239,31 @@ export default function Product() {
                   </div>
                 )}
 
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <svg
-                      className="w-5 h-5 text-primary"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                      />
-                    </svg>
+                {data.state && (
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <svg
+                        className="w-5 h-5 text-primary"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          fill="none"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">الحالة</p>
+                      <p className="font-medium text-gray-900">{data.state}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-600">الحالة</p>
-                    <p
-                      className={`font-medium ${
-                        data.stock > 0 ? "text-green-600" : "text-red-600"
-                      }`}
-                    >
-                      {data.stock > 0 ? "متاح للشراء" : "غير متاح"}
-                    </p>
-                  </div>
-                </div>
+                )}
               </div>
             </motion.div>
 

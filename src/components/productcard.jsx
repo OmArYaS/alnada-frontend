@@ -8,7 +8,6 @@ import "swiper/css/pagination";
 
 const Productcard = ({ item }) => {
   const navigate = useNavigate();
-  const isOutOfStock = item.stock <= 0;
 
   // Determine the main image and image count
   const images =
@@ -23,15 +22,16 @@ const Productcard = ({ item }) => {
       className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden relative"
     >
       {/* Stock Status Badge */}
-      {isOutOfStock && (
-        <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold z-20 shadow-lg">
-          محجوز
+      {item.state && (
+        <div className="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold z-20 shadow-lg">
+          {item.state}
         </div>
       )}
 
-      {item.stock <= 5 && item.stock > 0 && (
-        <div className="absolute top-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold z-20 shadow-lg">
-          متبقي {item.stock} فقط!
+      {/* Featured Badge */}
+      {item.featured && (
+        <div className="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold z-20 shadow-lg">
+          ⭐ مميز
         </div>
       )}
 
@@ -158,72 +158,48 @@ const Productcard = ({ item }) => {
             </div>
           )}
 
-          <div className="flex items-center gap-2 text-gray-600">
-            <svg
-              className="w-4 h-4 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-              />
-            </svg>
-            <span className="text-sm">
-              {item.stock > 0 ? `متوفر ${item.stock} عقار` : "غير متاح"}
-            </span>
-          </div>
+          {item.state && (
+            <div className="flex items-center gap-2 text-gray-600">
+              <svg
+                className="w-4 h-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  fill="none"
+                />
+              </svg>
+              <span className="text-sm">الحالة: {item.state}</span>
+            </div>
+          )}
         </div>
 
         {/* Action Button */}
         <motion.button
           whileTap={{ scale: 0.95 }}
-          disabled={isOutOfStock}
-          className={`w-full py-3 px-4 rounded-xl font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 ${
-            isOutOfStock
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl"
-          }`}
-          onClick={() => !isOutOfStock && addToCart(item._id, 1, navigate)}
+          className={`w-full py-3 px-4 rounded-xl font-bold text-white transition-all duration-300 flex items-center justify-center gap-2 ${"bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl"}`}
+          onClick={() => addToCart(item._id, 1, navigate)}
         >
-          {isOutOfStock ? (
-            <>
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-                />
-              </svg>
-              محجوز
-            </>
-          ) : (
-            <>
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
-                />
-              </svg>
-              إضافة إلى السلة
-            </>
-          )}
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
+            />
+          </svg>
+          إضافة إلى السلة
         </motion.button>
       </div>
 

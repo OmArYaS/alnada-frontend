@@ -21,7 +21,7 @@ import "swiper/css/scrollbar";
 export default function Hero() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["featuredProducts"],
-    queryFn: () => fetchProducts({ limit: 5 }),
+    queryFn: () => fetchProducts({ limit: 5, featured: "true" }),
     onError: (error) => {
       toast.error("فشل في تحميل العقارات المميزة");
     },

@@ -12,11 +12,12 @@ export default function EditProductModal({ isOpen, onClose, id }) {
   const [form, setForm] = useState({
     name: "",
     address: "",
-    stock: "",
     size: "",
     price: "",
     description: "",
     category: "",
+    state: "",
+    featured: false,
     images: [],
   });
   const [errors, setErrors] = useState({});
@@ -40,11 +41,12 @@ export default function EditProductModal({ isOpen, onClose, id }) {
             setForm({
               name: product.name || "",
               address: product.address || "",
-              stock: product.stock || "",
               size: product.size || "",
               price: product.price || "",
               description: product.description || "",
               category: product.category?._id || product.category || "",
+              state: product.state || "",
+              featured: product.featured || false,
               images: [],
             });
             setExistingImages(product.images || [product.image] || []);
@@ -61,23 +63,24 @@ export default function EditProductModal({ isOpen, onClose, id }) {
     mutationFn: editProductMutationFn,
     onSuccess: () => {
       queryClient.invalidateQueries(["products"]);
-      toast.success("Property updated successfully");
+      toast.success("تم تحديث العقار بنجاح");
       onClose();
       setForm({
         name: "",
         address: "",
-        stock: "",
         size: "",
         price: "",
         description: "",
         category: "",
+        state: "",
+        featured: false,
         images: [],
       });
       setPreviews([]);
       setExistingImages([]);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update property");
+      toast.error(error.message || "فشل في تحديث العقار");
     },
   });
 
@@ -85,9 +88,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
     const newErrors = {};
     // Only validate number fields if they have values
     if (form.price && isNaN(form.price))
-      newErrors.price = "Price must be a number";
-    if (form.stock && isNaN(form.stock))
-      newErrors.stock = "Stock must be a number";
+      newErrors.price = "يجب أن يكون السعر رقماً";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -156,9 +157,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
         >
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">
-                Edit Property
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-800">تعديل العقار</h2>
               <button
                 onClick={onClose}
                 className="text-gray-500 hover:text-gray-700"
@@ -177,7 +176,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Name
+                    اسم العقار
                   </label>
                   <input
                     name="name"
@@ -186,7 +185,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                     className={`w-full px-4 py-2 rounded-lg border ${
                       errors.name ? "border-red-500" : "border-gray-300"
                     } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="Property name"
+                    placeholder="اسم العقار"
                   />
                   {errors.name && (
                     <p className="mt-1 text-sm text-red-500">{errors.name}</p>
@@ -195,7 +194,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address
+                    العنوان
                   </label>
                   <input
                     name="address"
@@ -204,7 +203,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                     className={`w-full px-4 py-2 rounded-lg border ${
                       errors.address ? "border-red-500" : "border-gray-300"
                     } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="Property address"
+                    placeholder="عنوان العقار"
                   />
                   {errors.address && (
                     <p className="mt-1 text-sm text-red-500">
@@ -215,7 +214,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Price
+                    السعر
                   </label>
                   <input
                     name="price"
@@ -234,26 +233,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Stock
-                  </label>
-                  <input
-                    name="stock"
-                    type="number"
-                    value={form.stock}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.stock ? "border-red-500" : "border-gray-300"
-                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="0"
-                  />
-                  {errors.stock && (
-                    <p className="mt-1 text-sm text-red-500">{errors.stock}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Size
+                    المساحة
                   </label>
                   <input
                     name="size"
@@ -262,7 +242,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                     className={`w-full px-4 py-2 rounded-lg border ${
                       errors.size ? "border-red-500" : "border-gray-300"
                     } focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                    placeholder="Property size"
+                    placeholder="مساحة العقار"
                   />
                   {errors.size && (
                     <p className="mt-1 text-sm text-red-500">{errors.size}</p>
@@ -271,7 +251,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Category
+                    النوع
                   </label>
                   <select
                     name="category"
@@ -280,7 +260,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     disabled={categoriesLoading}
                   >
-                    <option value="">Select category</option>
+                    <option value="">اختر النوع</option>
                     {Array.isArray(categories) &&
                       categories.map((cat) => (
                         <option key={cat._id} value={cat._id}>
@@ -290,14 +270,53 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                   </select>
                   {categoriesError && (
                     <p className="mt-1 text-sm text-red-500">
-                      Failed to load categories
+                      فشل في تحميل الأنواع
                     </p>
                   )}
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    الحالة
+                  </label>
+                  <select
+                    name="state"
+                    value={form.state}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">اختر الحالة</option>
+                    <option value="متاح">متاح</option>
+                    <option value="محجوز">محجوز</option>
+                    <option value="جديد">جديد</option>
+                    <option value="قديم">قديم</option>
+                    <option value="تحت التشطيب">تحت التشطيب</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="featured"
+                      checked={form.featured}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          featured: e.target.checked,
+                        }))
+                      }
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      عقار مميز
+                    </span>
+                  </label>
+                </div>
+
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description
+                    الوصف
                   </label>
                   <textarea
                     name="description"
@@ -305,25 +324,25 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                     onChange={handleChange}
                     rows="3"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Property description"
+                    placeholder="وصف العقار"
                   />
                 </div>
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Images
+                    الصور
                   </label>
                   {existingImages.length > 0 && (
                     <div className="mb-4">
                       <p className="text-sm text-gray-600 mb-2">
-                        Current images:
+                        الصور الحالية:
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {existingImages.map((img, idx) => (
                           <img
                             key={idx}
                             src={img}
-                            alt={`Current ${idx + 1}`}
+                            alt={`صورة ${idx + 1}`}
                             className="w-16 h-16 object-cover rounded-lg border border-gray-200"
                           />
                         ))}
@@ -345,7 +364,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                           <img
                             key={idx}
                             src={src}
-                            alt={`Preview ${idx + 1}`}
+                            alt={`معاينة ${idx + 1}`}
                             className="w-16 h-16 object-cover rounded-lg border border-gray-200"
                           />
                         ))}
@@ -361,7 +380,7 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                   onClick={onClose}
                   className="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                  Cancel
+                  إلغاء
                 </button>
                 <button
                   type="submit"
@@ -390,10 +409,10 @@ export default function EditProductModal({ isOpen, onClose, id }) {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      <span>Updating...</span>
+                      <span>جاري التحديث...</span>
                     </div>
                   ) : (
-                    "Update Property"
+                    "تحديث العقار"
                   )}
                 </button>
               </div>

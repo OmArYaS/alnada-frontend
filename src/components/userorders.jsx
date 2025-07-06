@@ -304,10 +304,10 @@ export default function UserOrders() {
                                 <span className="font-medium">السعر:</span>{" "}
                                 {item.productId.price} جنيه مصري
                               </p>
-                              {item.productId.address && (
+                              {item.productId.state && (
                                 <p className="text-gray-600">
-                                  <span className="font-medium">الموقع:</span>{" "}
-                                  {item.productId.address}
+                                  <span className="font-medium">الحالة:</span>{" "}
+                                  {item.productId.state}
                                 </p>
                               )}
                             </div>

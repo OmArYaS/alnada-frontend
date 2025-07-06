@@ -5,9 +5,10 @@ const headers = [
   { key: "image", label: "الصورة" },
   { key: "name", label: "اسم العقار" },
   { key: "address", label: "العنوان" },
-  { key: "stock", label: "الحالة" },
+  { key: "state", label: "الحالة" },
   { key: "size", label: "المساحة" },
   { key: "price", label: "السعر" },
+  { key: "featured", label: "مميز" },
   { key: "description", label: "الوصف" },
   { key: "category", label: "النوع" },
   { key: "createdAt", label: "تاريخ الإضافة" },
@@ -163,7 +164,7 @@ export default function TableControlProducts({
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">
-                    {product.stock > 0 ? "متاح" : "محجوز"}
+                    {product.state || "-"}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -174,6 +175,11 @@ export default function TableControlProducts({
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
                     ج.م {product.price?.toFixed(2) || "0.00"}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-500">
+                    {product.featured ? "مميز" : "-"}
                   </div>
                 </td>
                 <td className="px-6 py-4">

@@ -12,8 +12,46 @@ export default function Product() {
   const navigate = useNavigate();
   const data = useLoaderData();
   const [quantity, setQuantity] = useState(1);
-  const images =
-    data.images && data.images.length > 0 ? data.images : [data.image];
+
+  // معالجة آمنة للصور - تدعم جميع الحالات المحتملة
+  const getSafeImages = () => {
+    let images = [];
+
+    if (Array.isArray(data.images) && data.images.length > 0) {
+      // إذا كانت images مصفوفة، تأكد أن كل عنصر له url
+      images = data.images
+        .map((img) => {
+          if (typeof img === "string") {
+            // إذا كان عنصر نصي (رابط قديم)
+            return { url: img };
+          } else if (img && typeof img === "object" && img.url) {
+            // إذا كان كائن فيه url
+            return img;
+          } else {
+            // إذا كان undefined أو null
+            return { url: "" };
+          }
+        })
+        .filter((img) => img.url); // إزالة الصور الفارغة
+    } else if (data.image) {
+      // إذا كان هناك image واحد
+      images = [
+        {
+          url:
+            typeof data.image === "string" ? data.image : data.image.url || "",
+        },
+      ];
+    }
+
+    // إذا لم توجد صور، استخدم صورة افتراضية
+    if (images.length === 0) {
+      images = [{ url: "/default-property.jpg" }];
+    }
+
+    return images;
+  };
+
+  const images = getSafeImages();
   const [selectedImage, setSelectedImage] = useState(images[0]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -68,7 +106,9 @@ export default function Product() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${selectedImage.url})`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${
+              selectedImage?.url || "/default-property.jpg"
+            })`,
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -125,9 +165,12 @@ export default function Product() {
               {/* Main Image */}
               <div className="relative aspect-[4/3] bg-gray-100">
                 <img
-                  src={selectedImage.url}
+                  src={selectedImage?.url || "/default-property.jpg"}
                   alt={data.name}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  onError={(e) => {
+                    e.target.src = "/default-property.jpg";
+                  }}
                 />
                 {data.state && (
                   <div className="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
@@ -157,9 +200,12 @@ export default function Product() {
                         style={{ width: 80, height: 60 }}
                       >
                         <img
-                          src={image.url}
+                          src={image?.url || "/default-property.jpg"}
                           alt={`${data.name} - ${index + 1}`}
                           className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = "/default-property.jpg";
+                          }}
                         />
                       </motion.button>
                     ))}
@@ -279,8 +325,6 @@ export default function Product() {
               </h3>
 
               <div className="space-y-4">
-
-
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}

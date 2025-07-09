@@ -23,11 +23,18 @@ export default function Hero() {
     queryKey: ["featuredProducts"],
     queryFn: () => fetchProducts({ limit: 5, featured: "true" }),
     onError: (error) => {
+      console.error("Hero fetch error:", error);
       toast.error("فشل في تحميل العقارات المميزة");
     },
   });
 
   const products = data?.data || [];
+
+  // Debug: طباعة البيانات للتحقق
+  console.log("Hero products:", products);
+  console.log("Hero data:", data);
+  console.log("Hero isLoading:", isLoading);
+  console.log("Hero error:", error);
 
   if (isLoading) {
     return (
@@ -99,7 +106,7 @@ export default function Hero() {
               delay: 4000,
               disableOnInteraction: false,
             }}
-            loop={true}
+            loop={products.length > 1}
             pagination={{
               clickable: true,
               el: ".hero-pagination",
@@ -116,166 +123,217 @@ export default function Hero() {
               },
             }}
           >
-            {products.map((item, index) => (
-              <SwiperSlide key={item._id}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white/20 relative"
-                >
-                  {/* Background Image */}
-                  <div className="absolute inset-0">
-                    {(() => {
-                      const images =
-                        item.images && item.images.length > 0
-                          ? item.images
-                          : [item.image];
-                      const mainImage = images[0];
+            {products.map((item, index) => {
+              console.log("Rendering product:", item);
+              return (
+                <SwiperSlide key={item._id || index}>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white/20 relative"
+                  >
+                    {/* Background Image */}
+                    <div className="absolute inset-0">
+                      {(() => {
+                        // معالجة آمنة للصور - تدعم جميع الحالات المحتملة
+                        let images = [];
 
-                      return (
-                        <div className="w-full h-full relative">
-                          <img
-                            src={mainImage}
-                            alt={String(item.name || "عقار مميز")}
-                            className="w-full h-full object-cover"
-                          />
-                          {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+                        if (
+                          Array.isArray(item.images) &&
+                          item.images.length > 0
+                        ) {
+                          // إذا كانت images مصفوفة، تأكد أن كل عنصر له url
+                          images = item.images
+                            .map((img) => {
+                              if (typeof img === "string") {
+                                // إذا كان عنصر نصي (رابط قديم)
+                                return { url: img };
+                              } else if (
+                                img &&
+                                typeof img === "object" &&
+                                img.url
+                              ) {
+                                // إذا كان كائن فيه url
+                                return img;
+                              } else {
+                                // إذا كان undefined أو null
+                                return { url: "" };
+                              }
+                            })
+                            .filter((img) => img.url); // إزالة الصور الفارغة
+                        } else if (item.image) {
+                          // إذا كان هناك image واحد
+                          images = [
+                            {
+                              url:
+                                typeof item.image === "string"
+                                  ? item.image
+                                  : item.image.url || "",
+                            },
+                          ];
+                        }
 
-                          {/* Image Gallery Indicator */}
-                          {images.length > 1 && (
-                            <div className="absolute top-4 right-4 z-10">
-                              <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-lg">
-                                <div className="flex gap-1">
-                                  {images.slice(0, 3).map((img, idx) => (
-                                    <img
-                                      key={idx}
-                                      src={img}
-                                      alt={`${String(
-                                        item.name || "عقار مميز"
-                                      )} ${idx + 1}`}
-                                      className="w-6 h-6 object-cover rounded border border-white shadow-sm"
-                                    />
-                                  ))}
+                        // إذا لم توجد صور، استخدم صورة افتراضية
+                        if (images.length === 0) {
+                          images = [{ url: "/default-property.jpg" }];
+                        }
+
+                        const mainImage = images[0];
+                        console.log("Main image:", mainImage);
+
+                        return (
+                          <div className="w-full h-full relative">
+                            <img
+                              src={mainImage.url}
+                              alt={String(item.name || "عقار مميز")}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                // إذا فشل تحميل الصورة، استخدم صورة افتراضية
+                                e.target.src = "/default-property.jpg";
+                              }}
+                            />
+                            {/* Gradient Overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+
+                            {/* Image Gallery Indicator */}
+                            {images.length > 1 && (
+                              <div className="absolute top-4 right-4 z-10">
+                                <div className="flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-lg">
+                                  <div className="flex gap-1">
+                                    {images.slice(0, 3).map((img, idx) => (
+                                      <img
+                                        key={idx}
+                                        src={img.url}
+                                        alt={`${String(
+                                          item.name || "عقار مميز"
+                                        )} ${idx + 1}`}
+                                        className="w-6 h-6 object-cover rounded border border-white shadow-sm"
+                                        onError={(e) => {
+                                          e.target.src =
+                                            "/default-property.jpg";
+                                        }}
+                                      />
+                                    ))}
+                                  </div>
+                                  {images.length > 3 && (
+                                    <span className="text-xs text-gray-600 bg-gray-100 px-1 py-0.5 rounded">
+                                      +{images.length - 3}
+                                    </span>
+                                  )}
                                 </div>
-                                {images.length > 3 && (
-                                  <span className="text-xs text-gray-600 bg-gray-100 px-1 py-0.5 rounded">
-                                    +{images.length - 3}
-                                  </span>
-                                )}
                               </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
-                  </div>
-
-                  {/* Content Overlay */}
-                  <div className="relative z-10 h-full min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] flex items-center">
-                    <div className="p-6 sm:p-8 lg:p-12 w-full max-w-2xl">
-                      <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="space-y-4 sm:space-y-6"
-                      >
-                        {/* Badge */}
-                        <motion.div
-                          initial={{ opacity: 0, y: -20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.3 }}
-                          className="inline-flex items-center px-3 py-1.5 bg-primary/90 backdrop-blur-sm text-white rounded-full text-sm font-medium shadow-lg"
-                        >
-                          <span className="w-2 h-2 bg-white rounded-full mr-2"></span>
-                          عقار مميز #{index + 1}
-                        </motion.div>
-
-                        {/* Title */}
-                        <motion.h2
-                          initial={{ opacity: 0, y: -20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.4 }}
-                          className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight drop-shadow-lg"
-                        >
-                          {String(item.name || "عقار مميز")}
-                        </motion.h2>
-
-                        {/* Description */}
-                        <motion.p
-                          initial={{ opacity: 0, y: -20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.5 }}
-                          className="text-sm sm:text-base lg:text-lg text-gray-100 leading-relaxed drop-shadow-md line-clamp-2 lg:line-clamp-3"
-                        >
-                          {String(
-                            item.description || "عقار مميز في موقع استراتيجي"
-                          )}
-                        </motion.p>
-
-                        {/* Features */}
-                        <motion.div
-                          initial={{ opacity: 0, y: -20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.6 }}
-                          className="flex flex-wrap gap-2 sm:gap-3"
-                        >
-                          {item.category?.name && (
-                            <span className="px-3 py-1.5 bg-white/20 backdrop-blur-sm text-white rounded-lg text-sm border border-white/30">
-                              {String(item.category.name)}
-                            </span>
-                          )}
-                          {item.address && (
-                            <span className="px-3 py-1.5 bg-white/20 backdrop-blur-sm text-white rounded-lg text-sm border border-white/30">
-                              📍 {String(item.address)}
-                            </span>
-                          )}
-                        </motion.div>
-
-                        {/* Price and CTA */}
-                        <motion.div
-                          initial={{ opacity: 0, y: -20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.7 }}
-                          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2 sm:pt-4"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white drop-shadow-lg">
-                              <span className="text-sm sm:text-lg font-normal">
-                                جنيه
-                              </span>{" "}
-                              {typeof item.price === "number"
-                                ? item.price.toLocaleString()
-                                : String(item.price || 0)}
-                            </span>
+                            )}
                           </div>
-                          <Link
-                            to={`/product/${item._id}`}
-                            className="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-xl font-medium backdrop-blur-sm border border-white/20"
-                          >
-                            <span>عرض التفاصيل</span>
-                            <svg
-                              className="w-4 h-4 mr-2 rtl:rotate-180"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 5l7 7-7 7"
-                              />
-                            </svg>
-                          </Link>
-                        </motion.div>
-                      </motion.div>
+                        );
+                      })()}
                     </div>
-                  </div>
-                </motion.div>
-              </SwiperSlide>
-            ))}
+
+                    {/* Content Overlay */}
+                    <div className="relative z-10 h-full min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] flex items-center">
+                      <div className="p-6 sm:p-8 lg:p-12 w-full max-w-2xl">
+                        <motion.div
+                          initial={{ opacity: 0, x: -30 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.2 }}
+                          className="space-y-4 sm:space-y-6"
+                        >
+                          {/* Badge */}
+                          <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="inline-flex items-center px-3 py-1.5 bg-primary/90 backdrop-blur-sm text-white rounded-full text-sm font-medium shadow-lg"
+                          >
+                            <span className="w-2 h-2 bg-white rounded-full mr-2"></span>
+                            عقار مميز #{index + 1}
+                          </motion.div>
+
+                          {/* Title */}
+                          <motion.h2
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4 }}
+                            className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight drop-shadow-lg"
+                          >
+                            {String(item.name || "عقار مميز")}
+                          </motion.h2>
+
+                          {/* Description */}
+                          <motion.p
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                            className="text-sm sm:text-base lg:text-lg text-gray-100 leading-relaxed drop-shadow-md line-clamp-2 lg:line-clamp-3"
+                          >
+                            {String(
+                              item.description || "عقار مميز في موقع استراتيجي"
+                            )}
+                          </motion.p>
+
+                          {/* Features */}
+                          <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6 }}
+                            className="flex flex-wrap gap-2 sm:gap-3"
+                          >
+                            {item.category?.name && (
+                              <span className="px-3 py-1.5 bg-white/20 backdrop-blur-sm text-white rounded-lg text-sm border border-white/30">
+                                {String(item.category.name)}
+                              </span>
+                            )}
+                            {item.address && (
+                              <span className="px-3 py-1.5 bg-white/20 backdrop-blur-sm text-white rounded-lg text-sm border border-white/30">
+                                📍 {String(item.address)}
+                              </span>
+                            )}
+                          </motion.div>
+
+                          {/* Price and CTA */}
+                          <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.7 }}
+                            className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2 sm:pt-4"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white drop-shadow-lg">
+                                <span className="text-sm sm:text-lg font-normal">
+                                  جنيه
+                                </span>{" "}
+                                {typeof item.price === "number"
+                                  ? item.price.toLocaleString()
+                                  : String(item.price || 0)}
+                              </span>
+                            </div>
+                            <Link
+                              to={`/product/${item._id}`}
+                              className="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-xl font-medium backdrop-blur-sm border border-white/20"
+                            >
+                              <span>عرض التفاصيل</span>
+                              <svg
+                                className="w-4 h-4 mr-2 rtl:rotate-180"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </Link>
+                          </motion.div>
+                        </motion.div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
 
           {/* Custom Navigation */}
@@ -357,7 +415,7 @@ export default function Hero() {
       </div>
 
       {/* Custom CSS for Swiper */}
-      <style jsx>{`
+      <style>{`
         .hero-swiper {
           padding-bottom: 2rem;
         }

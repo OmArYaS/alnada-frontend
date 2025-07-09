@@ -140,7 +140,7 @@ export default function TableControlProducts({
                       product.images && product.images.length > 0
                         ? product.images
                         : [product.image];
-                    const mainImage = images[0];
+                    const mainImage = images[0].url;
                     return (
                       <div className="relative w-12 h-12 flex items-center justify-center">
                         <img

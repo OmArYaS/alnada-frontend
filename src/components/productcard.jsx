@@ -59,7 +59,7 @@ const Productcard = ({ item }) => {
                 <SwiperSlide key={idx}>
                   <img
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    src={img}
+                    src={img.url}
                     alt={item.name || item.title}
                   />
                 </SwiperSlide>
@@ -68,7 +68,7 @@ const Productcard = ({ item }) => {
           ) : (
             <img
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              src={images[0]}
+              src={images[0].url}
               alt={item.name || item.title}
             />
           )}

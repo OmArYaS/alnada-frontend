@@ -68,7 +68,7 @@ export default function Product() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${selectedImage})`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${selectedImage.url})`,
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -125,7 +125,7 @@ export default function Product() {
               {/* Main Image */}
               <div className="relative aspect-[4/3] bg-gray-100">
                 <img
-                  src={selectedImage}
+                  src={selectedImage.url}
                   alt={data.name}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
@@ -157,7 +157,7 @@ export default function Product() {
                         style={{ width: 80, height: 60 }}
                       >
                         <img
-                          src={image}
+                          src={image.url}
                           alt={`${data.name} - ${index + 1}`}
                           className="w-full h-full object-cover"
                         />
@@ -279,35 +279,7 @@ export default function Product() {
               </h3>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">الكمية:</span>
-                  <div className="flex items-center border border-gray-300 rounded-lg bg-white">
-                    <button
-                      onClick={() => handleQuantityChange(quantity - 1)}
-                      disabled={quantity <= 1}
-                      className="px-3 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-50 transition-colors rounded-r-lg"
-                    >
-                      -
-                    </button>
-                    <input
-                      type="number"
-                      min="1"
-                      max={data.stock}
-                      value={quantity}
-                      onChange={(e) =>
-                        handleQuantityChange(parseInt(e.target.value))
-                      }
-                      className="w-16 text-center border-x border-gray-300 py-2 focus:outline-none bg-transparent"
-                    />
-                    <button
-                      onClick={() => handleQuantityChange(quantity + 1)}
-                      disabled={quantity >= data.stock}
-                      className="px-3 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-50 transition-colors rounded-l-lg"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
+
 
                 <motion.button
                   whileHover={{ scale: 1.02 }}

@@ -268,7 +268,7 @@ export default function UserOrders() {
                             return (
                               <div className="relative w-20 h-20 flex items-center justify-center">
                                 <img
-                                  src={mainImage}
+                                  src={mainImage.url}
                                   alt={item.productId.name}
                                   className="w-20 h-20 object-cover rounded-xl shadow-sm"
                                 />
@@ -277,7 +277,7 @@ export default function UserOrders() {
                                     {images.slice(0, 3).map((img, idx) => (
                                       <img
                                         key={idx}
-                                        src={img}
+                                        src={img.url}
                                         alt={
                                           item.productId.name +
                                           " مصغرة " +

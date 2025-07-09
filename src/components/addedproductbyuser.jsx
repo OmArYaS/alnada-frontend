@@ -223,7 +223,7 @@ export default function AddedProductByUser() {
                       return (
                         <div className="relative w-24 h-24 flex items-center justify-center">
                           <img
-                            src={mainImage}
+                            src={mainImage.url}
                             alt={item.product.name}
                             className="w-24 h-24 object-cover rounded-xl shadow-sm"
                           />
@@ -232,7 +232,7 @@ export default function AddedProductByUser() {
                               {images.slice(0, 3).map((img, idx) => (
                                 <img
                                   key={idx}
-                                  src={img}
+                                  src={img.url}
                                   alt={
                                     item.product.name + " مصغرة " + (idx + 1)
                                   }
